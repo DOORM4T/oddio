@@ -1,0 +1,14 @@
+<%- include('../includes/header', {hide:true}) %>
+<div id="content">
+    Hey there<%= name && `, ${name}` %>!
+
+    <%_ if(data) { %>
+    <ul>
+        <% for (let item of data) { %>
+        <li>Item: <%= item %></li>
+        <% } %>
+    </ul>
+    <% } %>
+</div>
+
+<%- include('../includes/footer', {hide:true}) %>
