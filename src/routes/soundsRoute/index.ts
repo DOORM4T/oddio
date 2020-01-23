@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import getSounds from './getSounds'
-import getUploadedSoundById from './getUploadedSoundById'
+import getUploadedSoundById from './getUploadedSound'
 import getSoundDataByid from './getSoundDataByid'
 import addSound from './addSound'
 import deleteSoundById from './deleteSoundById'
-import updateSoundById from './updateSoundById'
+import updateSoundById from './updateSound'
 
 const router = Router()
 
