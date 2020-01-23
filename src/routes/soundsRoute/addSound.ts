@@ -21,6 +21,7 @@ const uploadMiddleware = multer({
 	limits: { files: 1 },
 }).single('uploadedSound')
 
+// Data is from a multi-part form that includes a sound file
 router.post(
 	'/add',
 	uploadMiddleware,

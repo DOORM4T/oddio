@@ -6,7 +6,7 @@ import { Sound } from '../../schemas/soundSchema'
 /**
  * @route 	/sounds
  * @method	GET
- * @desc	Get a paginated list of available sounds on Oddio
+ * @desc	Get a paginated list of available sounds
  * @access	Public
  */
 const router = Router()
