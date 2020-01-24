@@ -1,5 +1,4 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import { Sound } from '../../schemas/soundSchema'
 import SoundsModel from '../../models/SoundsModel'
 
 /**

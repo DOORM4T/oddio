@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import getSounds from './getSounds'
 import getUploadedSoundById from './getUploadedSound'
-import getSoundDataByid from './getSoundDataByid'
+import getSoundDataById from './getSoundDataById'
 import addSound from './addSound'
 import deleteSoundById from './deleteSoundById'
 import updateSoundById from './updateSound'
@@ -13,7 +13,7 @@ router.use(
 	'/',
 	getSounds,
 	getUploadedSoundById,
-	getSoundDataByid,
+	getSoundDataById,
 	addSound,
 	deleteSoundById,
 	updateSoundById,
