@@ -5,6 +5,7 @@ import getSoundDataByid from './getSoundDataByid'
 import addSound from './addSound'
 import deleteSoundById from './deleteSoundById'
 import updateSoundById from './updateSound'
+import updateUploadedSound from './updateUploadedSound'
 
 const router = Router()
 
@@ -15,7 +16,8 @@ router.use(
 	getSoundDataByid,
 	addSound,
 	deleteSoundById,
-	updateSoundById
+	updateSoundById,
+	updateUploadedSound
 )
 
 export default router

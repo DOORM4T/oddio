@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import { ObjectId, GridFSBucketReadStream, MongoError, Cursor } from 'mongodb'
-import getGridfsBucket from './helpers/getGridfsBucket'
+import { MongoError } from 'mongodb'
+import SoundsModel from '../../models/SoundsModel'
 
 /**
  * @route	/sounds/uploads/:id
@@ -14,28 +14,24 @@ router.get(
 	'/uploads/:id',
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
-			const id: ObjectId = new ObjectId(req.params.id)
-			const uploadedSoundsCursor: Cursor = await getGridfsBucket(req).find({
-				_id: id,
-			})
-			const numSoundsWithId = await uploadedSoundsCursor.count()
-
-			if (numSoundsWithId === 0)
-				throw new Error(`No uploaded sound matches the requested ID.`)
-
-			const downloadStream: GridFSBucketReadStream = getGridfsBucket(
-				req
-			).openDownloadStream(id)
-
 			res.set('Content-Type', 'audio/mpeg')
 			res.set('Accept-Ranges', 'bytes')
+			const uploadedSoundExists = await SoundsModel.uploadedSoundExistsInGridFS(
+				req.params.id
+			)
+			if (!uploadedSoundExists)
+				throw new Error(`No uploaded sound matches the requested ID.`)
 
-			downloadStream.pipe(res)
+			const downloaded = await SoundsModel.pipeSoundFromGridFSToResponse(
+				req.params.id,
+				res
+			)
 
-			downloadStream.on('end', () => {
-				res.end()
-			})
+			if (!downloaded) throw new MongoError('Unable to get uploaded sound.')
+
+			res.end()
 		} catch (error) {
+			res.set('Content-Type', 'text/plain')
 			if (error instanceof MongoError) res.status(500)
 			else res.status(400)
 			res.send(`Unable to get uploaded sound with ID: ${req.params.id}.`)

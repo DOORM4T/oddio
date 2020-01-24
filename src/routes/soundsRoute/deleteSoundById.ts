@@ -1,8 +1,6 @@
-import { Router } from 'express'
-import { ObjectId, MongoError, DeleteWriteOpResultObject } from 'mongodb'
-import getSoundsCollection from './helpers/getSoundsCollection'
-import getGridfsBucket from './helpers/getGridfsBucket'
-import { Sound } from '../../schemas/soundSchema'
+import { Router, Request, Response, NextFunction } from 'express'
+import { ObjectId, MongoError } from 'mongodb'
+import SoundsModel from '../../models/SoundsModel'
 
 /**
  * @route   /sounds/:id
@@ -12,34 +10,40 @@ import { Sound } from '../../schemas/soundSchema'
  */
 const router = Router()
 
-router.delete('/:id', async (req, res, next) => {
-	try {
-		const id: ObjectId = new ObjectId(req.params.id)
-		const dataOfSoundToDelete: Sound | null = await getSoundsCollection(
-			req
-		).findOne({ _id: id })
+router.delete(
+	'/:id',
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			const dataOfSoundToDelete = await SoundsModel.getSoundById(req.params.id)
+			if (!dataOfSoundToDelete) throw new Error(`No data for requested sound.`)
 
-		if (!dataOfSoundToDelete) throw new Error(`No data for requested sound.`)
+			const soundSourceId: ObjectId = dataOfSoundToDelete.sourceId
+			const soundExists = await SoundsModel.uploadedSoundExistsInGridFS(
+				soundSourceId
+			)
+			if (!soundExists) throw new Error('Sound upload does not exist.')
 
-		const soundSourceId: ObjectId = dataOfSoundToDelete.sourceId
-		getGridfsBucket(req).delete(soundSourceId, (error) => {
-			if (error) throw error
-		})
+			const deletedFromGridFS = await SoundsModel.deleteSoundFromGridFSBySourceId(
+				soundSourceId
+			)
+			if (!deletedFromGridFS)
+				throw new MongoError('Unable to delete uploaded sound in GridFS.')
 
-		// Delete sound JSON after successfully deleting the uploaded sound that was stored via GridFS
-		const soundJSONDeletionResult: DeleteWriteOpResultObject = await getSoundsCollection(
-			req
-		).deleteOne({ _id: id })
+			// Delete sound JSON after successfully deleting the uploaded sound that was stored via GridFS
+			const soundJSONDeletionResult = await SoundsModel.deleteSoundJSONById(
+				req.params.id
+			)
 
-		res.json(soundJSONDeletionResult)
-	} catch (error) {
-		if (error instanceof MongoError) res.status(500)
-		else res.status(400)
-		res.send(
-			`Unable to delete sound JSON with ID: ${req.params.id} & its corresponding sound upload, if either exists.`
-		)
-		next(error)
+			res.json(soundJSONDeletionResult)
+		} catch (error) {
+			if (error instanceof MongoError) res.status(500)
+			else res.status(400)
+			res.send(
+				`Unable to delete sound JSON with ID: ${req.params.id} & its corresponding sound upload, if either exists.`
+			)
+			next(error)
+		}
 	}
-})
+)
 
 export default router

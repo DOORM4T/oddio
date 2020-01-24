@@ -1,14 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import getGridfsBucket from './helpers/getGridfsBucket'
-import getSoundsCollection from './helpers/getSoundsCollection'
 import multer from 'multer'
 import soundSchema, { Sound } from '../../schemas/soundSchema'
-import { Readable } from 'stream'
-import {
-	MongoError,
-	GridFSBucketWriteStream,
-	InsertOneWriteOpResult,
-} from 'mongodb'
+import { MongoError } from 'mongodb'
+import SoundsModel from '../../models/SoundsModel'
 
 /**
  * @route	/sounds/add
@@ -33,10 +27,15 @@ router.post(
 				stripUnknown: true,
 			})
 
-			uploadToGridfs(req, validatedSound)
-			const insertionResult: InsertOneWriteOpResult<any> = await getSoundsCollection(
-				req
-			).insertOne(validatedSound)
+			const uploadedToGridFS = await SoundsModel.uploadSoundToGridFS(
+				req.file.buffer,
+				validatedSound.sourceId,
+				validatedSound.name
+			)
+			if (!uploadedToGridFS)
+				throw new MongoError('Unable to upload sound to GridFS')
+
+			const insertionResult = await SoundsModel.insertSoundJSON(validatedSound)
 			return res.json(insertionResult)
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500)
@@ -49,17 +48,3 @@ router.post(
 )
 
 export default router
-
-function uploadToGridfs(req: Request, { sourceId, name }: Sound) {
-	const uploadStream: GridFSBucketWriteStream = getGridfsBucket(
-		req
-	).openUploadStreamWithId(sourceId, name)
-	const soundDataReadableStream: Readable = new Readable()
-
-	soundDataReadableStream.on('close', () => {
-		console.log('finished uploading sound')
-	})
-	soundDataReadableStream.push(req.file.buffer)
-	soundDataReadableStream.push(null)
-	soundDataReadableStream.pipe(uploadStream)
-}

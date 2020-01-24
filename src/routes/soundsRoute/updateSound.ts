@@ -1,7 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import soundSchema, { Sound } from '../../schemas/soundSchema'
-import getSoundsCollection from './helpers/getSoundsCollection'
-import { ObjectId, UpdateWriteOpResult } from 'mongodb'
+import SoundsModel from '../../models/SoundsModel'
 
 /**
  * @route   /sounds/:id
@@ -12,16 +11,24 @@ import { ObjectId, UpdateWriteOpResult } from 'mongodb'
 const router = Router()
 router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		console.log(req.body)
+		const previousSoundJSON: {
+			[key: string]: any
+		} | null = await SoundsModel.getSoundById(req.params.id)
+		if (!previousSoundJSON) throw new Error('Sound JSON does not exist.')
 
-		const updatedSoundData: Sound = await soundSchema.validate(req.body, {
+		const updatedJSON: { [key: string]: any } = {}
+		Object.keys(previousSoundJSON).forEach((key) => {
+			updatedJSON[key] =
+				req.body[key] !== undefined ? req.body[key] : previousSoundJSON[key]
+		})
+
+		const validUpdatedJSON = await soundSchema.validate(updatedJSON, {
 			stripUnknown: true,
 		})
-		const updateResult: UpdateWriteOpResult = await getSoundsCollection(
-			req
-		).updateOne(
-			{ _id: new ObjectId(req.params.id) },
-			{ $set: updatedSoundData }
+
+		const updateResult = await SoundsModel.updateSoundJSONById(
+			req.params.id,
+			validUpdatedJSON
 		)
 		res.json(updateResult)
 	} catch (error) {

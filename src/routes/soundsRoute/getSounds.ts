@@ -1,7 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import getSoundsCollection from './helpers/getSoundsCollection'
-import { Cursor } from 'mongodb'
-import { Sound } from '../../schemas/soundSchema'
+import SoundsModel from '../../models/SoundsModel'
 
 /**
  * @route 	/sounds
@@ -14,9 +12,8 @@ const router = Router()
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// TODO: Pagination & Querying
-		const cursor: Cursor = await getSoundsCollection(req).find()
-		const data: Sound[] = await cursor.toArray()
-		return res.json(data)
+		const sounds = await SoundsModel.getSounds()
+		return res.json(sounds)
 	} catch (error) {
 		res.status(500).send('Unable to get sounds.')
 		next(error)
