@@ -4,6 +4,7 @@ import SoundsModel from './models/SoundsModel'
 /**
  * Connects to MongoDB and injects the resulting client database into models for accessing data
  */
+export let client: MongoClient
 export default async function injectMongoIntoModels(): Promise<void> {
 	try {
 		const MONGO_URI: string = process.env.MONGO_URI || ''
@@ -12,7 +13,7 @@ export default async function injectMongoIntoModels(): Promise<void> {
 			useUnifiedTopology: true,
 			wtimeout: 2500,
 		}
-		const client = await MongoClient.connect(MONGO_URI, mongoOptions)
+		client = await MongoClient.connect(MONGO_URI, mongoOptions)
 		const db: Db = client.db('oddioconcept')
 		SoundsModel.injectDB(db)
 	} catch (error) {
