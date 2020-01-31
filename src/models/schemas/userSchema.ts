@@ -1,6 +1,8 @@
 import * as yup from 'yup'
+import { ObjectId } from 'mongodb'
 
 const userSchema = yup.object({
+	_id: yup.mixed().default(new ObjectId()),
 	email: yup
 		.string()
 		.email()

@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import { genSalt, hash } from 'bcryptjs'
-import userSchema, { User } from '../../schemas/userSchema'
+import userSchema, { User } from '../../models/schemas/userSchema'
 import getUsersCollection from './helpers/getUsersCollection'
 import { InsertOneWriteOpResult } from 'mongodb'
 const router = Router()

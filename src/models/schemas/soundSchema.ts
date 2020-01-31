@@ -2,6 +2,7 @@ import * as yup from 'yup'
 import { ObjectId } from 'mongodb'
 
 const soundSchema = yup.object().shape({
+	_id: yup.mixed().default(new ObjectId()),
 	author: yup.string().required(),
 	category: yup.string().default('Miscellaneous'),
 	created: yup.date().default(new Date()),

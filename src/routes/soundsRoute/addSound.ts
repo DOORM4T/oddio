@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express'
 import multer from 'multer'
-import soundSchema, { Sound } from '../../schemas/soundSchema'
+import soundSchema, { Sound } from '../../models/schemas/soundSchema'
 import { MongoError } from 'mongodb'
 import SoundsModel from '../../models/SoundsModel'
 

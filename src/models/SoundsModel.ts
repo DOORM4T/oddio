@@ -9,7 +9,7 @@ import {
 } from 'mongodb'
 import { Readable } from 'stream'
 import { Response } from 'express'
-import { Sound } from '../schemas/soundSchema'
+import { Sound } from './schemas/soundSchema'
 
 let soundsCollection: Collection, uploadedSoundsBucket: GridFSBucket
 export default class SoundsModel {
