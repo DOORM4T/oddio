@@ -18,18 +18,17 @@ router.delete(
 			if (!dataOfSoundToDelete) throw new Error(`No data for requested sound.`)
 
 			const soundSourceId: ObjectId = dataOfSoundToDelete.sourceId
-			const soundExists = await SoundsModel.uploadedSoundExistsInGridFS(
+			const uploadedSoundExists = await SoundsModel.uploadedSoundExistsInGridFS(
 				soundSourceId
 			)
-			if (!soundExists) throw new Error('Sound upload does not exist.')
+			if (uploadedSoundExists) {
+				const deletedFromGridFS = await SoundsModel.deleteSoundFromGridFSBySourceId(
+					soundSourceId
+				)
+				if (!deletedFromGridFS)
+					throw new MongoError('Unable to delete uploaded sound in GridFS.')
+			}
 
-			const deletedFromGridFS = await SoundsModel.deleteSoundFromGridFSBySourceId(
-				soundSourceId
-			)
-			if (!deletedFromGridFS)
-				throw new MongoError('Unable to delete uploaded sound in GridFS.')
-
-			// Delete sound JSON after successfully deleting the uploaded sound that was stored via GridFS
 			const soundJSONDeletionResult = await SoundsModel.deleteSoundJSONById(
 				req.params.id
 			)
