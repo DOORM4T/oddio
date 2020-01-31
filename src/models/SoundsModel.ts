@@ -4,7 +4,6 @@ import {
 	GridFSBucketOptions,
 	Db,
 	ObjectId,
-	InsertOneWriteOpResult,
 	Cursor,
 } from 'mongodb'
 import { Readable } from 'stream'
@@ -20,12 +19,7 @@ export default class SoundsModel {
 		uploadedSoundsBucket = new GridFSBucket(db, gridfsOptions)
 	}
 
-	static logInstances() {
-		console.log(soundsCollection)
-		console.log(uploadedSoundsBucket)
-	}
-
-	// MONGODB DRIVER METHODS
+	// COMMON MONGODB DRIVER METHODS
 	static async getSounds() {
 		const cursor: Cursor = await soundsCollection.find()
 		const sounds: Sound[] | null = await cursor.toArray()
