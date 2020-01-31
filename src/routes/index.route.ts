@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express'
-import soundsRoute from './soundsRoute/index'
+import soundsRoute from './sounds.route'
 
 const router = Router()
 
@@ -8,6 +8,6 @@ router.get('/', (req: Request, res: Response, next: NextFunction) => {
 	res.render('pages/index', { name: 'Steve', data })
 })
 
-router.use('/sounds', soundsRoute)
+router.use('/api/sounds', soundsRoute)
 
 export default router

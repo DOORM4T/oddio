@@ -15,7 +15,7 @@ afterAll(async () => {
 	await client.close()
 })
 
-describe('Sound API', () => {
+describe('Sounds API', () => {
 	const mockSound: Sound = soundSchema.validateSync(
 		{ author: 'Dandelion' },
 		{ stripUnknown: true }
@@ -23,10 +23,10 @@ describe('Sound API', () => {
 	const mockId: string = mockSound._id.toHexString()
 	const mockSourceId: string = mockSound.sourceId.toHexString()
 
-	describe('POST requests on /sounds', () => {
+	describe('POST requests on /api/sounds', () => {
 		it('successfully POSTs valid form data', async (done) => {
 			request
-				.post('/sounds/add')
+				.post('/api/sounds/add')
 				.set('Content-Type', 'multipart/form-data')
 				.field('author', mockSound.author)
 				.field('_id', mockId)
@@ -37,7 +37,7 @@ describe('Sound API', () => {
 
 		it('rejects form data missing uploadedSound', (done) => {
 			request
-				.post('/sounds/add')
+				.post('/api/sounds/add')
 				.set('Content-Type', 'multipart/form-data')
 				.field('author', 'Dandelion')
 				.expect(400, done)
@@ -45,17 +45,17 @@ describe('Sound API', () => {
 
 		it('rejects form data missing required text fields', (done) => {
 			request
-				.post('/sounds/add')
+				.post('/api/sounds/add')
 				.set('Content-Type', 'multipart/form-data')
 				.attach('uploadedSound', path.resolve('__tests__', 'testAudio1.mp3'))
 				.expect(400, done)
 		})
 	})
 
-	describe('PUT requests on /sounds', () => {
+	describe('PUT requests on /api/sounds', () => {
 		it('successfully updates JSON fields', (done) => {
 			request
-				.put(`/sounds/${mockId}`)
+				.put(`/api/sounds/${mockId}`)
 				.send({
 					author: 'new author',
 					name: 'updated name',
@@ -67,32 +67,32 @@ describe('Sound API', () => {
 
 		it('error if requested ID is invalid', (done) => {
 			request
-				.put(`/sounds/badelot`)
+				.put(`/api/sounds/badelot`)
 				.send({ author: 'knight of the bad ID' })
 				.expect(400, done)
 		})
 
 		it('successfully updates uploaded sound by SourceID', (done) => {
 			request
-				.put(`/sounds/uploads/${mockSourceId}`)
+				.put(`/api/sounds/uploads/${mockSourceId}`)
 				.set('Content-Type', 'multipart/form-data')
-				.attach('newSound', path.resolve('__tests__', 'testAudio2.mp3'))
+				.attach('uploadedSound', path.resolve('__tests__', 'testAudio2.mp3'))
 				.expect(200, done)
 		})
 
 		it('error if requested SourceID is invalid', (done) => {
 			request
-				.put(`/sounds/uploads/potatoes`)
+				.put(`/api/sounds/uploads/potatoes`)
 				.set('Content-Type', 'multipart/form-data')
-				.attach('newSound', path.resolve('__tests__', 'testAudio2.mp3'))
+				.attach('uploadedSound', path.resolve('__tests__', 'testAudio2.mp3'))
 				.expect(400, done)
 		})
 	})
 
-	describe('GET requests on /sounds', () => {
+	describe('GET requests on /api/sounds', () => {
 		it('gets all sound JSON', (done) => {
 			request
-				.get('/sounds')
+				.get('/api/sounds')
 				.expect(200)
 				.end((err: Error, res: Response) => {
 					if (err) throw err
@@ -103,7 +103,7 @@ describe('Sound API', () => {
 
 		it('gets sound data by ID', (done) => {
 			request
-				.get(`/sounds/${mockId}`)
+				.get(`/api/sounds/${mockId}`)
 				.expect(200)
 				.end((err: Error, res: Response) => {
 					if (err) throw err
@@ -113,29 +113,29 @@ describe('Sound API', () => {
 		})
 
 		it('error if requested ID is invalid', (done) => {
-			request.get(`/sounds/abc123thisisabadid`).expect(400, done)
+			request.get(`/api/sounds/abc123thisisabadid`).expect(400, done)
 		})
 
 		it('gets audio stream by SourceID', (done) => {
 			request
-				.get(`/sounds/uploads/${mockSourceId}`)
+				.get(`/api/sounds/uploads/${mockSourceId}`)
 				.expect('Content-Type', 'audio/mpeg')
 				.expect('Accept-Ranges', 'bytes')
 				.expect(200, done)
 		})
 
 		it('error if requested SourceID is invalid', (done) => {
-			request.get(`/sounds/uploads/badsourceid`).expect(400, done)
+			request.get(`/api/sounds/uploads/badsourceid`).expect(400, done)
 		})
 	})
 
-	describe('DELETE requests on /sounds', () => {
+	describe('DELETE requests on /api/sounds', () => {
 		it('successfully deletes by ID', (done) => {
-			request.delete(`/sounds/${mockId}`).expect(200, done)
+			request.delete(`/api/sounds/${mockId}`).expect(200, done)
 		})
 
 		it('error if requested ID is invalid', (done) => {
-			request.delete('/sounds/hocuspocusthisisabadid-us').expect(400, done)
+			request.delete('/api/sounds/hocuspocusthisisabadid-us').expect(400, done)
 		})
 	})
 })

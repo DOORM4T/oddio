@@ -4,8 +4,8 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"start": "node dist/server",
-		"dev": "nodemon src/server.ts",
+		"start": "node dist/index",
+		"dev": "nodemon src/index.ts",
 		"build": "tsc -p .",
 		"test": "jest"
 	},
