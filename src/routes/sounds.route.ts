@@ -1,16 +1,13 @@
 import { Router } from 'express'
 import SoundsController from '../controllers/SoundsController'
-import multer from 'multer'
-
+import uploadedSoundMiddleware from './middleware/uploadedSoundMiddleware'
+import validationMiddleware from './middleware/validationMiddleware'
 const router = Router()
 
 router.get('/', SoundsController.getSounds)
 router.get('/:id', SoundsController.getSoundDataById)
 router.get('/uploads/:sourceId', SoundsController.getUploadedSoundBySourceId)
 
-const uploadedSoundMiddleware = multer({ limits: { files: 1 } }).single(
-	'uploadedSound'
-)
 router.post('/add', uploadedSoundMiddleware, SoundsController.addSound)
 router.put(
 	'/uploads/:sourceId',

@@ -67,9 +67,10 @@ export default class UsersController {
 			if (!passwordIsValid) throw new Error('Invalid password.')
 			const jwt = sign({ email: req.body.email }, 'potatoes', {
 				algorithm: 'HS256',
-				expiresIn: '10s',
+				expiresIn: '60s',
 			})
-			res.send(jwt)
+
+			res.json({ token: jwt })
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500).send(error.message)
 			else res.status(400).send('Invalid email and/or password.')
