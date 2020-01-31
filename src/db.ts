@@ -1,12 +1,10 @@
-require('dotenv').config()
-import app from './app'
 import { MongoClient, MongoClientOptions, Db } from 'mongodb'
 import SoundsModel from './models/SoundsModel'
 
 /**
  * Connects to MongoDB and injects the resulting client database into models for accessing data
  */
-const injectMongoIntoModels: Function = async function(): Promise<void> {
+export default async function injectMongoIntoModels(): Promise<void> {
 	try {
 		const MONGO_URI: string = process.env.MONGO_URI || ''
 		const mongoOptions: MongoClientOptions = {
@@ -22,9 +20,3 @@ const injectMongoIntoModels: Function = async function(): Promise<void> {
 		process.exit(1)
 	}
 }
-
-injectMongoIntoModels().then(() => {
-	app.listen(3000, () => {
-		console.log('Server started on port 3000.')
-	})
-})
