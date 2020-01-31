@@ -7,21 +7,20 @@ const userSchema = yup.object({
 		.string()
 		.email()
 		.required('Please enter a valid email.'),
+	fame: yup.number().default(0),
 	joined: yup.date().default(new Date()),
 	password: yup
 		.string()
-		.min(6)
 		.matches(
 			new RegExp(
-				/^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&]{6,}$/
+				/^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&]{6,100}$/
 			)
 		)
 		.required('Please enter a valid password.'),
+	private: yup.boolean().default(false),
 	username: yup
 		.string()
-		.min(3)
-		.max(30)
-		.matches(new RegExp(/^[\w\d_]{3,}$/))
+		.matches(new RegExp(/^[\w\d_]{3,30}$/))
 		.required('Please enter a valid username.'),
 })
 
