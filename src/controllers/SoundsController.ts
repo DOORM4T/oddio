@@ -5,7 +5,7 @@ import { MongoError, ObjectId } from 'mongodb'
 
 export default class SoundsController {
 	/**
-	 * @route	/sounds/add
+	 * @route	/api/sounds/add
 	 * @method	POST
 	 * @desc	Upload sound data & the associated sound file to MongoDB
 	 * @access	Validation Required
@@ -38,7 +38,7 @@ export default class SoundsController {
 	}
 
 	/**
-	 * @route   /sounds/:id
+	 * @route   /api/sounds/:id
 	 * @method  DELETE
 	 * @desc    Delete a sound and its corresponding upload by ID
 	 * @access  Validation Required
@@ -80,7 +80,7 @@ export default class SoundsController {
 	}
 
 	/**
-	 * @route   /sounds/:id
+	 * @route   /api/sounds/:id
 	 * @method	GET
 	 * @desc    Get sound JSON via the _id property.
 	 * @access  Public
@@ -101,7 +101,7 @@ export default class SoundsController {
 	}
 
 	/**
-	 * @route 	/sounds
+	 * @route 	/api/sounds
 	 * @method	GET
 	 * @desc	Get a paginated list of available sounds
 	 * @access	Public
@@ -118,7 +118,7 @@ export default class SoundsController {
 	}
 
 	/**
-	 * @route	/sounds/uploads/:sourceId
+	 * @route	/api/sounds/uploads/:sourceId
 	 * @method	GET
 	 * @desc	Get the audio of an uploaded sound by its source ID
 	 * @access	Public
@@ -155,7 +155,7 @@ export default class SoundsController {
 	}
 
 	/**
-	 * @route   /sounds/:id
+	 * @route   /api/sounds/:id
 	 * @method  PUT
 	 * @desc    Updates an existing sound's JSON data
 	 * @access  Validation Required
@@ -194,7 +194,7 @@ export default class SoundsController {
 	}
 
 	/**
-	 * @route   /sounds/uploads/:sourceId
+	 * @route   /api/sounds/uploads/:sourceId
 	 * @method  PUT
 	 * @desc    Updates an existing sound's JSON data
 	 * @access  Validation Required
