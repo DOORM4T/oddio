@@ -50,6 +50,8 @@ export default class SoundsModel {
 	}
 
 	static async insertSoundJSON(soundJSON: Sound) {
+		soundJSON._id = new ObjectId(soundJSON._id)
+		soundJSON.sourceId = new ObjectId(soundJSON.sourceId)
 		const result = await soundsCollection.insertOne(soundJSON)
 		return result
 	}

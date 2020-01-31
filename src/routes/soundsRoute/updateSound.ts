@@ -30,6 +30,7 @@ router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
 			req.params.id,
 			validUpdatedJSON
 		)
+
 		res.json(updateResult)
 	} catch (error) {
 		res.status(400).send('Invalid update data')
