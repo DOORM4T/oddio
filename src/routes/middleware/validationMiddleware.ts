@@ -7,13 +7,15 @@ export default function validationMiddleware(
 	next: NextFunction
 ) {
 	try {
-		if (!req.body.token) throw new Error('No token provided.')
+		const token = req.cookies.authToken
+		if (!token) throw new Error('No token provided.')
 
-		const decoded: Object | null = verify(req.body.token, 'potatoes')
+		const secret = process.env.JWT_SECRET || ''
+		const decoded: Object | null = verify(token, secret)
 		if (!('email' in decoded)) new Error('Invalid token.')
 		next()
 	} catch (error) {
 		res.status(403).send('You cannot pass.')
-		return next(error)
+		next(error)
 	}
 }
