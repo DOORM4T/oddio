@@ -65,12 +65,16 @@ export default class UsersController {
 			const passwordIsValid = await compare(req.body.password, user.password)
 
 			if (!passwordIsValid) throw new Error('Invalid password.')
-			const jwt = sign({ email: req.body.email }, 'potatoes', {
+
+			const secret = process.env.JWT_SECRET || ''
+			const jwt = sign({ email: req.body.email }, secret, {
 				algorithm: 'HS256',
 				expiresIn: '60s',
 			})
 
-			res.json({ token: jwt })
+			res
+				.cookie('authToken', jwt, { maxAge: 60000, httpOnly: true })
+				.render('pages/index', { message: 'success' })
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500).send(error.message)
 			else res.status(400).send('Invalid email and/or password.')
