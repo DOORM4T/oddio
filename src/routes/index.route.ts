@@ -5,8 +5,7 @@ import usersRoute from './users.route'
 const router = Router()
 
 router.get('/', (req: Request, res: Response, next: NextFunction) => {
-	const data: number[] = [1, 2, 3]
-	res.render('pages/index', { name: 'Steve', data })
+	res.render('pages/index')
 })
 
 router.use('/api/sounds', soundsRoute)
