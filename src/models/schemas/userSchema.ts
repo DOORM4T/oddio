@@ -18,6 +18,7 @@ const userSchema = yup.object({
 		)
 		.required('Please enter a valid password.'),
 	private: yup.boolean().default(false),
+	sounds: yup.array().default([]),
 	username: yup
 		.string()
 		.matches(new RegExp(/^[\w\d_]{3,30}$/))

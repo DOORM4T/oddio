@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import soundSchema, { Sound } from '../models/schemas/soundSchema'
 import SoundsModel from '../models/SoundsModel'
 import { MongoError, ObjectId } from 'mongodb'
+import UsersModel from '../models/UsersModel'
 
 export default class SoundsController {
 	/**
@@ -14,6 +15,10 @@ export default class SoundsController {
 		try {
 			if (!req.file) throw new Error('No sound file was uploaded.')
 
+			// res.locals is set during token validation
+			req.body.author = res.locals.username
+			req.body._id = new ObjectId()
+			req.body.sourceId = new ObjectId()
 			const validatedSound: Sound = await soundSchema.validate(req.body, {
 				stripUnknown: true,
 			})
@@ -25,6 +30,12 @@ export default class SoundsController {
 			)
 			if (!uploadedToGridFS)
 				throw new MongoError('Unable to upload sound to GridFS')
+
+			const addedToUser = await UsersModel.addSoundToUserSounds(
+				res.locals.userEmail,
+				validatedSound._id
+			)
+			if (!addedToUser) throw new MongoError('Unable to add sound to user list')
 
 			const insertionResult = await SoundsModel.insertSoundJSON(validatedSound)
 			return res.json(insertionResult)
@@ -52,6 +63,9 @@ export default class SoundsController {
 			const dataOfSoundToDelete = await SoundsModel.getSoundById(req.params.id)
 			if (!dataOfSoundToDelete) throw new Error(`No data for requested sound.`)
 
+			if (dataOfSoundToDelete.author !== res.locals.username)
+				throw new Error('Cannot sound created by another user.')
+
 			const soundSourceId: ObjectId = dataOfSoundToDelete.sourceId
 			const uploadedSoundExists = await SoundsModel.uploadedSoundExistsInGridFS(
 				soundSourceId
@@ -64,10 +78,16 @@ export default class SoundsController {
 					throw new MongoError('Unable to delete uploaded sound in GridFS.')
 			}
 
+			const deletedSoundFromUserSounds = await UsersModel.deleteSoundFromUserSounds(
+				res.locals.userEmail,
+				req.params.id
+			)
+			if (!deletedSoundFromUserSounds)
+				throw new MongoError('Unable to delete sound from user list')
+
 			const soundJSONDeletionResult = await SoundsModel.deleteSoundJSONById(
 				req.params.id
 			)
-
 			res.json(soundJSONDeletionResult)
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500)
@@ -171,6 +191,9 @@ export default class SoundsController {
 			} | null = await SoundsModel.getSoundById(req.params.id)
 			if (!previousSoundJSON) throw new Error('Sound JSON does not exist.')
 
+			if (previousSoundJSON.author !== res.locals.username)
+				throw new Error('Unable to edit sound created by another user.')
+
 			const updatedJSON: { [key: string]: any } = {}
 			Object.keys(previousSoundJSON).forEach((key) => {
 				updatedJSON[key] =
@@ -218,6 +241,9 @@ export default class SoundsController {
 			)
 			if (!correspondingSoundJSON)
 				throw new MongoError('Corresponding sound JSON does not exist.')
+
+			if (correspondingSoundJSON.author !== res.locals.username)
+				throw new Error('Unable to edit sound created by another user.')
 
 			// Delete uploaded sound
 			const deletedFromGridFS = await SoundsModel.deleteSoundFromGridFSBySourceId(
