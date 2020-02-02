@@ -5,7 +5,7 @@ import injectMongo, { client } from '../src/db'
 import soundSchema, { Sound } from '../src/models/schemas/soundSchema'
 import path from 'path'
 
-const request: SuperTest<any> = supertest(app)
+const request: SuperTest<any> = supertest.agent(app)
 
 beforeAll(async () => {
 	await injectMongo()
@@ -13,6 +13,13 @@ beforeAll(async () => {
 
 afterAll(async () => {
 	await client.close()
+})
+
+beforeEach(() => {
+	request
+		.post('/auth/login')
+		.send({ email: 'firstman@example.com', password: 'C00lc4t123$%^' })
+		.expect(200)
 })
 
 describe('Sounds API', () => {
