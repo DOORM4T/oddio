@@ -128,4 +128,15 @@ export default class SoundsModel {
 			})
 		})
 	}
+
+	// User interaction
+	static async incrementFameById(soundId: ObjectId | string) {
+		const _id = new ObjectId(soundId)
+		const result = await soundsCollection.updateOne(
+			{ _id },
+			{ $inc: { fame: 1 } }
+		)
+
+		return result.result.nModified > 0
+	}
 }

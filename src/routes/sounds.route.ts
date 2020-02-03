@@ -16,6 +16,7 @@ router.put(
 	SoundsController.updateUploadedSoundBySourceId
 )
 router.put('/:id', validate, SoundsController.updateSoundById)
+router.put('/:id/incrementfame', validate, SoundsController.incrementFameById)
 
 router.delete('/:id', validate, SoundsController.deleteSoundById)
 

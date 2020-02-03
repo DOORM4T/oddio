@@ -81,11 +81,11 @@ export default class UsersController {
 			const secret = process.env.JWT_SECRET || ''
 			const jwt = sign({ email: user.email, username: user.username }, secret, {
 				algorithm: 'HS256',
-				expiresIn: '60s',
+				expiresIn: '24h',
 			})
 
 			res
-				.cookie('authToken', jwt, { maxAge: 60000, httpOnly: true })
+				.cookie('authToken', jwt, { maxAge: 60 * 60 * 24, httpOnly: true })
 				.render('pages/index', { message: 'success' })
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500).send(error.message)

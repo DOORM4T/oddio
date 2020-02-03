@@ -66,4 +66,22 @@ export default class UsersModel {
 		)
 		return result.modifiedCount > 0
 	}
+
+	static async addToFamed(
+		userId: ObjectId | string,
+		soundId: ObjectId | string
+	) {
+		soundId = new ObjectId(soundId)
+		userId = new ObjectId(userId)
+
+		const user = await this.findUserById(userId)
+		if (!user) throw new Error('User does not exist')
+		if (user.soundsFamed.includes(soundId.toHexString())) return false
+
+		const result = await usersCollection.updateOne(
+			{ _id: userId },
+			{ $push: { soundsFamed: soundId.toHexString() } }
+		)
+		return result.result.nModified > 0
+	}
 }

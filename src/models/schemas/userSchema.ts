@@ -7,7 +7,6 @@ const userSchema = yup.object({
 		.string()
 		.email()
 		.required('Please enter a valid email.'),
-	fame: yup.number().default(0),
 	joined: yup.date().default(new Date()),
 	password: yup
 		.string()
@@ -19,6 +18,7 @@ const userSchema = yup.object({
 		.required('Please enter a valid password.'),
 	private: yup.boolean().default(false),
 	sounds: yup.array().default([]),
+	soundsFamed: yup.array<string>().default([]),
 	username: yup
 		.string()
 		.matches(new RegExp(/^[\w\d_]{3,30}$/))

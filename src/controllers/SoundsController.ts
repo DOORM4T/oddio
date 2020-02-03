@@ -3,6 +3,7 @@ import soundSchema, { Sound } from '../models/schemas/soundSchema'
 import SoundsModel from '../models/SoundsModel'
 import { MongoError, ObjectId } from 'mongodb'
 import UsersModel from '../models/UsersModel'
+import { User } from '../models/schemas/userSchema'
 
 export default class SoundsController {
 	/**
@@ -230,14 +231,15 @@ export default class SoundsController {
 		try {
 			if (req.file === undefined) throw new Error('No file uploaded.')
 
+			const { sourceId } = req.params
 			const uploadedSoundExists = await SoundsModel.uploadedSoundExistsInGridFS(
-				req.params.sourceId
+				sourceId
 			)
 			if (!uploadedSoundExists)
 				throw new Error('Uploaded sound does not exist.')
 
 			const correspondingSoundJSON = await SoundsModel.getSoundBySourceId(
-				req.params.sourceId
+				sourceId
 			)
 			if (!correspondingSoundJSON)
 				throw new MongoError('Corresponding sound JSON does not exist.')
@@ -268,6 +270,44 @@ export default class SoundsController {
 			res
 				.status(400)
 				.send(`Unable to update uploaded sound with ID: ${req.params.sourceId}`)
+			next(error)
+		}
+	}
+
+	/**
+	 * @route   /api/sounds/:id/incrementfame
+	 * @method  PUT
+	 * @desc    Increment's a sound's fame by one
+	 * @access  Validation Required
+	 */
+	static async incrementFameById(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
+		try {
+			const soundId = req.params.id
+
+			const user: User | null = await UsersModel.findUserByFields({
+				email: res.locals.userEmail,
+			})
+			if (!user) throw new Error('Current user does not exist.')
+			const addedToUserFamedList = await UsersModel.addToFamed(
+				user._id,
+				soundId
+			)
+			if (!addedToUserFamedList)
+				throw new Error("Sound already exists in user's famed list.")
+
+			const incrementedFame = await SoundsModel.incrementFameById(soundId)
+			if (!incrementedFame) throw new Error('Unable to increment fame.')
+
+			res.send(`Successfully incremented fame of sound: ${soundId}`)
+		} catch (error) {
+			if (error instanceof MongoError) res.status(500)
+			else res.status(400)
+
+			res.send('Unable to increment fame.')
 			next(error)
 		}
 	}
