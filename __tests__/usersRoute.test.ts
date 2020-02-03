@@ -4,7 +4,7 @@ import app from '../src/app'
 import injectMongo, { client } from '../src/db'
 
 let request: SuperTest<any> = supertest(app)
-let authCookie: Array<string>
+let authCookie: string[]
 beforeAll(async (done) => {
 	const mongoURI = process.env.MONGO_JEST_URI || ''
 	await injectMongo(mongoURI)

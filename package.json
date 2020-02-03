@@ -7,7 +7,9 @@
 		"start": "node dist/index",
 		"dev": "nodemon src/index.ts",
 		"build": "tsc -p .",
-		"test": "jest"
+		"test": "jest",
+		"test:sounds": "jest soundsRoute.test.ts",
+		"test:users": "jest usersRoute.test.ts"
 	},
 	"devDependencies": {
 		"@types/bcryptjs": "^2.4.2",
