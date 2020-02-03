@@ -2,7 +2,7 @@ import * as yup from 'yup'
 import { ObjectId } from 'mongodb'
 
 const userSchema = yup.object({
-	_id: yup.mixed().default(new ObjectId()),
+	_id: yup.mixed().required('Value of type ObjectID is required'),
 	email: yup
 		.string()
 		.email()

@@ -1,8 +1,7 @@
 import UsersModel from '../models/UsersModel'
 import { Request, Response, NextFunction } from 'express'
-import { MongoError } from 'mongodb'
+import { MongoError, ObjectId } from 'mongodb'
 import userSchema, { User } from '../models/schemas/userSchema'
-import { ValidationError } from 'yup'
 import { compare } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
 
@@ -44,9 +43,11 @@ export default class UsersController {
 					`An account using the email ${req.body.email} already exists.`
 				)
 
+			req.body._id = new ObjectId()
 			const validatedUserData: User = await userSchema.validate(req.body, {
 				stripUnknown: true,
 			})
+
 			const insertionResult = await UsersModel.addUser(validatedUserData)
 			res.json(insertionResult)
 		} catch (error) {
