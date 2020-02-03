@@ -14,7 +14,7 @@ app.use('/*', (req: Request, res: Response, next: NextFunction) => {
 	res.status(404).send('Page not found')
 })
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-	console.log(error.message)
+	console.error(error.message)
 })
 
 export default app
