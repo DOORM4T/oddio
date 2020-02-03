@@ -8,16 +8,17 @@ export let client: MongoClient
 /**
  * Connects to MongoDB and injects the resulting client database into models for accessing data
  */
-export default async function injectMongoIntoModels(): Promise<void> {
+export default async function injectMongoIntoModels(
+	mongoURI: string
+): Promise<void> {
 	try {
-		const MONGO_URI: string = process.env.MONGO_URI || ''
 		const mongoOptions: MongoClientOptions = {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 			wtimeout: 2500,
 		}
-		client = await MongoClient.connect(MONGO_URI, mongoOptions)
-		const db: Db = client.db('oddioconcept')
+		client = await MongoClient.connect(mongoURI, mongoOptions)
+		const db: Db = client.db()
 		SoundsModel.injectDB(db)
 		UsersModel.injectDB(db)
 	} catch (error) {
