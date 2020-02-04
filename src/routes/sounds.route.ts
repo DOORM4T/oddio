@@ -17,6 +17,7 @@ router.put(
 )
 router.put('/:id', validate, SoundsController.updateSoundById)
 router.put('/:id/incrementfame', validate, SoundsController.incrementFameById)
+router.put('/:id/decrementfame', validate, SoundsController.decrementFameById)
 
 router.delete('/:id', validate, SoundsController.deleteSoundById)
 

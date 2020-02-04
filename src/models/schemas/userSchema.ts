@@ -17,7 +17,7 @@ const userSchema = yup.object({
 		)
 		.required('Please enter a valid password.'),
 	private: yup.boolean().default(false),
-	sounds: yup.array().default([]),
+	sounds: yup.array<string>().default([]),
 	soundsFamed: yup.array<string>().default([]),
 	username: yup
 		.string()

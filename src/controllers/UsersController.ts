@@ -125,7 +125,7 @@ export default class UsersController {
 				throw new Error('A valid email and password are required.')
 
 			const result = await UsersModel.deleteUser(email, password)
-			res.json(result)
+			res.clearCookie('authToken').json(result)
 		} catch (error) {
 			res.status(400).send('Unable to delete user account.')
 			next(error)

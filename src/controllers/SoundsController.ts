@@ -212,7 +212,7 @@ export default class SoundsController {
 
 			res.json(updateResult)
 		} catch (error) {
-			res.status(400).send('Invalid update data')
+			res.status(400).send('Unable to update sound JSON.')
 			next(error)
 		}
 	}
@@ -300,7 +300,7 @@ export default class SoundsController {
 				throw new Error("Sound already exists in user's famed list.")
 
 			const incrementedFame = await SoundsModel.incrementFameById(soundId)
-			if (!incrementedFame) throw new Error('Unable to increment fame.')
+			if (!incrementedFame) throw new MongoError('Failed to increment fame.')
 
 			res.send(`Successfully incremented fame of sound: ${soundId}`)
 		} catch (error) {
@@ -308,6 +308,45 @@ export default class SoundsController {
 			else res.status(400)
 
 			res.send('Unable to increment fame.')
+			next(error)
+		}
+	}
+
+	/**
+	 * @route   /api/sounds/:id/decrementfame
+	 * @method  PUT
+	 * @desc    Decrement's a sound's fame by one
+	 * @access  Validation Required
+	 */
+	static async decrementFameById(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
+		try {
+			const soundId = req.params.id
+			const user: User | null = await UsersModel.findUserByFields({
+				email: res.locals.userEmail,
+			})
+			if (!user) throw new Error('Current user does not exist.')
+
+			if (!user.soundsFamed.includes(soundId))
+				throw new Error("Sound is not in users' famed list.")
+			const removedFromFamed = await UsersModel.removeFromFamed(
+				user._id,
+				soundId
+			)
+			if (!removedFromFamed)
+				throw new MongoError('Unable to remove sound from famed list.')
+			const decrementedFame = await SoundsModel.decrementFameById(soundId)
+			if (!decrementedFame) throw new MongoError('Failed to decrement fame.')
+
+			res.send(`Successfully decremented fame of sound: ${soundId}`)
+		} catch (error) {
+			if (error instanceof MongoError) res.status(500)
+			else res.status(400)
+
+			res.send('Unable to decrement fame.')
 			next(error)
 		}
 	}

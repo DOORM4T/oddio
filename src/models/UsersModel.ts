@@ -1,6 +1,7 @@
 import { Db, Collection, ObjectId, MongoError } from 'mongodb'
 import { User } from './schemas/userSchema'
 import { hash, genSalt, compare } from 'bcryptjs'
+import SoundsModel from './SoundsModel'
 
 let usersCollection: Collection
 export default class UsersModel {
@@ -46,6 +47,18 @@ export default class UsersModel {
 		const passwordIsValid = await compare(password, user.password)
 		if (!passwordIsValid) throw new Error('Invalid password.')
 
+		await user.soundsFamed.forEach(async (soundId) => {
+			await SoundsModel.decrementFameById(soundId)
+			await usersCollection.updateMany(
+				{ soundsFamed: { $in: [soundId] } },
+				{ $pull: { soundsFamed: { $in: [soundId] } } }
+			)
+		})
+
+		user.sounds.forEach(async (soundId) => {
+			await SoundsModel.deleteSoundJSONById(soundId)
+		})
+
 		const deleted = await usersCollection.deleteOne({ email })
 		return deleted
 	}
@@ -82,6 +95,20 @@ export default class UsersModel {
 			{ _id: userId },
 			{ $push: { soundsFamed: soundId.toHexString() } }
 		)
+		return result.result.nModified > 0
+	}
+
+	static async removeFromFamed(
+		userId: ObjectId | string,
+		soundId: ObjectId | string
+	) {
+		soundId = new ObjectId(soundId)
+		userId = new ObjectId(userId)
+		const result = await usersCollection.updateOne(
+			{ _id: userId },
+			{ $pull: { soundsFamed: { $in: [soundId.toHexString()] } } }
+		)
+
 		return result.result.nModified > 0
 	}
 }
