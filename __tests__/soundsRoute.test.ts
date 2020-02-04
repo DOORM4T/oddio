@@ -129,6 +129,34 @@ describe('Sounds API', () => {
 				)
 				.expect(400, done)
 		})
+
+		it('increment fame by ID', (done) => {
+			request
+				.put(`/api/sounds/${testSoundId}/incrementfame`)
+				.set({ Cookie: authCookie })
+				.expect(200, done)
+		})
+
+		it('fails to double-increment fame', (done) => {
+			request
+				.put(`/api/sounds/${testSoundId}/incrementfame`)
+				.set({ Cookie: authCookie })
+				.expect(400, done)
+		})
+
+		it('decrement fame by by ID', (done) => {
+			request
+				.put(`/api/sounds/${testSoundId}/decrementfame`)
+				.set({ Cookie: authCookie })
+				.expect(200, done)
+		})
+
+		it('fails to double-decrement fame', (done) => {
+			request
+				.put(`/api/sounds/${testSoundId}/decrementfame`)
+				.set({ Cookie: authCookie })
+				.expect(400, done)
+		})
 	})
 
 	describe('GET requests on /api/sounds', () => {
