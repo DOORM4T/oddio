@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import SoundCatalogContainer from "../containers/SoundCatalogContainer";
 import Button from "../components/Button";
+import Footer from "../components/Footer";
 
 export default function Home() {
   return (
@@ -18,7 +19,7 @@ export default function Home() {
           </Link>
         </div>
       </main>
-      <footer>Made with 💖 and 💔 by Matt Seto</footer>
+      <Footer />
     </>
   );
 }
