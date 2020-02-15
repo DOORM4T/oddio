@@ -1,0 +1,25 @@
+@import url(https://use.typekit.net/axe1alc.css);
+@import url(../node_modules/normalize.css/normalize.css);
+@import "./_variables.scss";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: english-small-caps, sans-serif;
+  display: flex;
+  justify-content: center;
+  background-color: $primary;
+  color: $font-color;
+}
+
+#root {
+  width: 100%;
+}
+
+a {
+  text-decoration: none;
+}
