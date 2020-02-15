@@ -7,10 +7,10 @@ interface CatalogProps {
 
 export default function Catalog({ render }: CatalogProps) {
   return (
-    <article className={styles.catalog}>
+    <section className={styles.catalog}>
       <button className="button-left">◀</button>
       <ul>{render()}</ul>
       <button className="button-right">▶</button>
-    </article>
+    </section>
   );
 }
