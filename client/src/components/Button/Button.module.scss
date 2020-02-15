@@ -1,0 +1,9 @@
+@import "../../variables";
+
+.button {
+  border-radius: 30px;
+  border: 1px solid black;
+  cursor: pointer;
+  padding: 1rem 6rem;
+  background-color: $accent; // default color
+}
