@@ -11,15 +11,15 @@ export default function Header({ title }: HeaderProps) {
     <header className={styles.header}>
       <h1>{title}</h1>
       <nav>
-        <button>
-          <Link to="/">🎤</Link>
-        </button>
-        <button>
-          <Link to="/">⚙</Link>
-        </button>
-        <button>
-          <Link to="/">👤</Link>
-        </button>
+        <Link to="/">
+          <button>🎤</button>
+        </Link>
+        <Link to="/">
+          <button>⚙</button>
+        </Link>
+        <Link to="/">
+          <button>👤</button>
+        </Link>
       </nav>
     </header>
   );
