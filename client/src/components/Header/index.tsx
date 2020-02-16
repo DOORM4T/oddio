@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
+import SearchBar from "../SearchBar";
 
 interface HeaderProps {
   title: string;
@@ -9,8 +10,10 @@ interface HeaderProps {
 export default function Header({ title }: HeaderProps) {
   return (
     <header className={styles.header}>
-      <h1>{title}</h1>
-      <nav>
+      <h1 id="title" data-aos="zoom-out">
+        {title}
+      </h1>
+      <nav id="navigation" data-aos="fade">
         <Link to="/">
           <button>🎤</button>
         </Link>
