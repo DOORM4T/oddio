@@ -7,6 +7,6 @@
   padding: 1rem 6rem;
   background-color: $accent; // default color
   font-size: 1.5rem;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  margin: 0 auto;
+  display: block;
 }
