@@ -30,6 +30,9 @@ export default class UsersController {
 	 */
 	static async registerUser(req: Request, res: Response, next: NextFunction) {
 		try {
+			req.body.username = req.body.username.toUpperCase()
+			req.body.email = req.body.email.toUpperCase()
+
 			let existingUser = await UsersModel.findUserByFields({
 				username: req.body.username,
 			})
@@ -68,6 +71,7 @@ export default class UsersController {
 	 */
 	static async loginUser(req: Request, res: Response, next: NextFunction) {
 		try {
+			req.body.email = req.body.email.toUpperCase()
 			let user = await UsersModel.findUserByFields({
 				email: req.body.email,
 			})
