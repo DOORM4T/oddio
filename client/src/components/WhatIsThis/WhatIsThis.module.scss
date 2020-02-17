@@ -1,0 +1,40 @@
+@import '../../variables';
+
+.whatisthis {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	position: relative;
+
+	& > span {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: rgb(46, 130, 168);
+		border-radius: 50%;
+		padding: 1rem;
+		width: 25px;
+		height: 25px;
+		font-size: 16px;
+		cursor: help;
+	}
+
+	& > p {
+		visibility: hidden;
+		transform: translate(0);
+		opacity: 0;
+		transition: left 0.4s ease-out, opacity 0.5s ease;
+		position: absolute;
+		background-color: $dark;
+		padding: 0.25rem 0.5rem;
+		border-radius: 4px;
+		color: #fdfdfd;
+		left: 0;
+	}
+
+	& > span:hover + p {
+		visibility: visible;
+		left: 3rem;
+		opacity: 1;
+	}
+}

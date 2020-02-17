@@ -4,15 +4,21 @@ import Form, { Field } from '../components/Form'
 export default function RegisterForm() {
 	const fields: Field[] = [
 		{
+			name: 'username',
+			placeholder: 'username',
+			type: 'username',
+			required: true,
+		},
+		{
 			name: 'email',
 			placeholder: 'email',
 			type: 'email',
 			required: true,
 		},
 		{
-			name: 'username',
-			placeholder: 'username',
-			type: 'username',
+			name: 'confirmEmail',
+			placeholder: 'confirm email',
+			type: 'email',
 			required: true,
 		},
 		{
@@ -30,18 +36,21 @@ export default function RegisterForm() {
 	]
 
 	interface RegisterFormState {
-		email: string
 		username: string
+		email: string
+		confirmEmail: string
 		password: string
 		confirmPassword: string
 	}
 
 	const validatePasswordConfirm = ({
+		email,
+		confirmEmail,
 		password,
 		confirmPassword,
 	}: RegisterFormState) => {
-		console.log(password, confirmPassword)
-
+		if (email !== confirmEmail)
+			throw new Error('Email and Confirm Email fields do not match.')
 		if (password !== confirmPassword)
 			throw new Error('Password and Confirm Password fields do not match.')
 	}
