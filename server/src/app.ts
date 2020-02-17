@@ -1,6 +1,12 @@
-import express, { Application, Request, Response, NextFunction } from 'express'
+import express, {
+	Application,
+	Request,
+	Response,
+	NextFunction,
+	CookieOptions,
+} from 'express'
 import cors from 'cors'
-import cookieParser from 'cookie-parser'
+import cookieParser, { CookieParseOptions } from 'cookie-parser'
 import routes from './routes/index.route'
 import { resolve } from 'path'
 

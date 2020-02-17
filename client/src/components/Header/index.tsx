@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import styles from './Header.module.scss'
+import { GlobalContext } from '../../context/globalContext'
 
 interface HeaderProps {
 	title: string
@@ -8,6 +9,8 @@ interface HeaderProps {
 }
 
 export default function Header({ title, icon }: HeaderProps) {
+	const { globalState, dispatch } = useContext(GlobalContext)
+
 	return (
 		<header className={styles.header}>
 			<h1 id="title" data-aos="zoom-out">
@@ -17,6 +20,9 @@ export default function Header({ title, icon }: HeaderProps) {
 				</span>
 			</h1>
 			<HeaderNav />
+			{globalState?.user.username && (
+				<h2>Hey there, {globalState?.user.username}!</h2>
+			)}
 		</header>
 	)
 }

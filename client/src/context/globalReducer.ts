@@ -2,7 +2,13 @@ import { GlobalStateAction } from './globalActions'
 
 export const initialGlobalState = {
 	user: {
-		name: '',
+		_id: '',
+		username: '',
+		soundsFamed: [],
+		sounds: [],
+		private: true,
+		email: '',
+		joined: '',
 	},
 	ui: {
 		theme: 'default',
@@ -17,7 +23,7 @@ export const globalStateReducer = (
 	const { type, payload } = action
 	switch (type) {
 		case 'LOGIN_USER':
-			return { ...state, user: { name: payload } }
+			return { ...state, user: payload }
 		case 'LOGOUT_USER':
 			return { ...state, user: { name: '' } }
 		case 'CHANGE_THEME':

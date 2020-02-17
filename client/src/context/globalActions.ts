@@ -3,9 +3,26 @@ export type GlobalStateAction = {
 	payload: any
 }
 
-export function loginUserAction(username: string): GlobalStateAction {
+export type User = {
+	_id: string
+	username: string
+	soundsFamed: string[]
+	sounds: string[]
+	private: boolean
+	email: string
+	joined: string
+}
+
+export function loginUserAction(userData: User): GlobalStateAction {
 	return {
 		type: 'LOGIN_USER',
-		payload: username,
+		payload: userData,
+	}
+}
+
+export function logoutUserAction(): GlobalStateAction {
+	return {
+		type: 'LOGOUT_USER',
+		payload: null,
 	}
 }

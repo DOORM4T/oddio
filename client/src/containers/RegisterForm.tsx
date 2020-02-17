@@ -35,14 +35,6 @@ export default function RegisterForm() {
 		},
 	]
 
-	interface RegisterFormState {
-		username: string
-		email: string
-		confirmEmail: string
-		password: string
-		confirmPassword: string
-	}
-
 	const validatePasswordConfirm = ({
 		email,
 		confirmEmail,
@@ -65,4 +57,12 @@ export default function RegisterForm() {
 			redirect="/login"
 		/>
 	)
+}
+
+interface RegisterFormState {
+	username: string
+	email: string
+	confirmEmail: string
+	password: string
+	confirmPassword: string
 }

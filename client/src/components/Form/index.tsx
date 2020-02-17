@@ -2,22 +2,6 @@ import React, { useState, ChangeEvent, FormEvent } from 'react'
 import { useHistory } from 'react-router-dom'
 import styles from './Form.module.scss'
 
-export interface Field {
-	name: string
-	placeholder: string
-	type: string
-	required: boolean
-}
-
-interface FormProps {
-	action: string
-	method: string
-	fields: Field[]
-	submitText: string
-	submitStateValidation?: (formState: any) => void
-	redirect?: string
-}
-
 export default function Form({
 	action,
 	method,
@@ -54,8 +38,7 @@ export default function Form({
 					'Content-Type': 'application/json',
 				},
 			})
-			const message = await response.text()
-			console.log(message)
+			const responseText = await response.text()
 			if (redirect && response.status === 200) history.push(redirect)
 		} catch (error) {
 			console.error(error.message)
@@ -88,4 +71,20 @@ export default function Form({
 			<button type="submit">{submitText}</button>
 		</form>
 	)
+}
+
+export interface Field {
+	name: string
+	placeholder: string
+	type: string
+	required: boolean
+}
+
+interface FormProps {
+	action: string
+	method: string
+	fields: Field[]
+	submitText: string
+	submitStateValidation?: (formState: any) => void
+	redirect?: string
 }
