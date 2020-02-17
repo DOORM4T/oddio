@@ -28,9 +28,14 @@ export default class UsersController {
 	 * @desc    Get user by username
 	 * @access  Public
 	 */
-	static async getUserByEmail(req: Request, res: Response, next: NextFunction) {
+	static async getUserByUsername(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
 		try {
-			const users = await UsersModel.findUserByUsername(req.body.username)
+			const username = req.params.username.toUpperCase()
+			const users = await UsersModel.findUserByUsername(username)
 			res.json(users)
 		} catch (error) {
 			if (error instanceof MongoError)

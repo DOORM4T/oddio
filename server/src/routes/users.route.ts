@@ -4,6 +4,7 @@ import validate from './middleware/validationMiddleware'
 const router = Router()
 
 router.get('/api/users', UsersController.getUsers)
+router.get('/api/users/:username', UsersController.getUserByUsername)
 router.post('/auth/register', UsersController.registerUser)
 router.post('/auth/login', UsersController.loginUser)
 router.post('/auth/logout', validate, UsersController.logoutUser)
