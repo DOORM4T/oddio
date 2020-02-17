@@ -23,6 +23,7 @@ export default function LoginForm() {
 			fields={fields}
 			method="POST"
 			submitText="Login"
+			redirect="/"
 		/>
 	)
 }

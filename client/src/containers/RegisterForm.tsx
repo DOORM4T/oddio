@@ -60,8 +60,9 @@ export default function RegisterForm() {
 			action="/auth/register"
 			fields={fields}
 			method="POST"
-			submitText="Register"
+			submitText="Create Account"
 			submitStateValidation={validatePasswordConfirm}
+			redirect="/login"
 		/>
 	)
 }

@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react'
+import { useHistory } from 'react-router-dom'
 import styles from './Form.module.scss'
 
 export interface Field {
@@ -14,6 +15,7 @@ interface FormProps {
 	fields: Field[]
 	submitText: string
 	submitStateValidation?: (formState: any) => void
+	redirect?: string
 }
 
 export default function Form({
@@ -22,10 +24,13 @@ export default function Form({
 	fields,
 	submitText,
 	submitStateValidation,
+	redirect,
 }: FormProps) {
 	const [formState, setFormState] = useState(
 		Object.fromEntries(fields.map(({ name }) => [name, '']))
 	)
+
+	const history = useHistory()
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target
@@ -51,6 +56,7 @@ export default function Form({
 			})
 			const message = await response.text()
 			console.log(message)
+			if (redirect && response.status === 200) history.push(redirect)
 		} catch (error) {
 			console.error(error.message)
 		}
