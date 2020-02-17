@@ -25,7 +25,7 @@ function HeaderNav() {
 	const links = [
 		{ to: '/', icon: '🎤' },
 		{ to: '/', icon: '⚙' },
-		{ to: '/', icon: '👤' },
+		{ to: '/login', icon: '👤' },
 	]
 
 	return (
