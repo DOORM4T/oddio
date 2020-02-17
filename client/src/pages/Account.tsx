@@ -6,7 +6,7 @@ import Spacing from '../components/Spacing'
 export default function Account() {
 	return (
 		<article>
-			<Header title="Account 🔐" />
+			<Header title="Account" icon="🔐" />
 			<Spacing spaces={3} />
 			<LoginForm />
 		</article>

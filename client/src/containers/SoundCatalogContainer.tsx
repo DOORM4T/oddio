@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode, ReactNodeArray } from 'react'
+import React, { useState, useEffect } from 'react'
 import Catalog from '../components/Catalog'
 
 interface Sound {
@@ -17,11 +17,19 @@ export default function SoundCatalogContainer() {
 	const [sounds, setSounds] = useState<Sound[]>([])
 
 	useEffect(() => {
-		const getSounds = async () => {
-			const response = await fetch('http://localhost:3001/api/sounds')
-			const data = await response.json()
-			return data
+		async function getSounds(): Promise<Sound[]> {
+			try {
+				const response = await fetch('/api/sounds')
+				const data: Sound[] | null = await response.json()
+				if (data === null) throw new Error('Failed to fetch sounds.')
+				return data
+			} catch (error) {
+				console.error(error.message)
+				return []
+			}
 		}
+
+		getSounds().then((data) => setSounds(() => data))
 	}, [])
 
 	function renderFunction() {
