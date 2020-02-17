@@ -1,4 +1,4 @@
-import { Db, Collection, ObjectId, MongoError } from 'mongodb'
+import { Db, Collection, ObjectId, MongoError, Cursor } from 'mongodb'
 import { User } from './schemas/userSchema'
 import { hash, genSalt, compare } from 'bcryptjs'
 import SoundsModel from './SoundsModel'
@@ -37,6 +37,14 @@ export default class UsersModel {
 	static async findUserById(_id: ObjectId | string) {
 		if (typeof _id === 'string') _id = new ObjectId(_id)
 		const user: User | null = await usersCollection.findOne({ _id })
+		return user
+	}
+
+	static async findUserByUsername(username: string) {
+		const user: User | null = await usersCollection.findOne(
+			{ username },
+			{ projection: { password: 0 } }
+		)
 		return user
 	}
 

@@ -23,6 +23,24 @@ export default class UsersController {
 	}
 
 	/**
+	 * @route   /api/users/:username
+	 * @method  GET
+	 * @desc    Get user by username
+	 * @access  Public
+	 */
+	static async getUserByEmail(req: Request, res: Response, next: NextFunction) {
+		try {
+			const users = await UsersModel.findUserByUsername(req.body.username)
+			res.json(users)
+		} catch (error) {
+			if (error instanceof MongoError)
+				res.status(400).send('Unable to get user.')
+			else res.status(400).send('User does not exist')
+			next(error)
+		}
+	}
+
+	/**
 	 * @route   /auth/register
 	 * @method  POST
 	 * @desc    Register a new user
@@ -71,14 +89,16 @@ export default class UsersController {
 	 */
 	static async loginUser(req: Request, res: Response, next: NextFunction) {
 		try {
-			req.body.email = req.body.email.toUpperCase()
+			let { email, password } = req.body
+			email = email.toUpperCase()
+
 			let user = await UsersModel.findUserByFields({
-				email: req.body.email,
+				email,
 			})
 
 			if (!user) throw new Error('User with provided email does not exist.')
 
-			const passwordIsValid = await compare(req.body.password, user.password)
+			const passwordIsValid = await compare(password, user.password)
 
 			if (!passwordIsValid) throw new Error('Invalid password.')
 
@@ -88,9 +108,12 @@ export default class UsersController {
 				expiresIn: '24h',
 			})
 
+			const userWithoutPassword = await UsersModel.findUserByUsername(
+				user.username
+			)
 			res
-				.cookie('authToken', jwt, { maxAge: 60 * 60 * 24, httpOnly: true })
-				.render('pages/index', { message: 'success' })
+				.cookie('authToken', jwt, { maxAge: 1000 * 60 * 60 * 24 })
+				.json(userWithoutPassword)
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500).send(error.message)
 			else res.status(400).send('Invalid email and/or password.')
