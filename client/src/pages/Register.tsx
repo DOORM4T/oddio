@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Spacing from '../components/Spacing'
 import Header from '../components/Header'
 import RegisterForm from '../containers/RegisterForm'

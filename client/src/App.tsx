@@ -1,4 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useReducer, useEffect } from 'react'
+import { GlobalContext } from './context/globalContext'
+import {
+	GlobalState,
+	globalStateReducer,
+	initialGlobalState,
+} from './context/globalReducer'
+import { GlobalStateAction } from './context/globalActions'
+
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AOS, { AosOptions } from 'aos'
 import 'aos/dist/aos.css'
@@ -9,6 +17,10 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 
 export default function App() {
+	const [globalState, dispatch] = useReducer<
+		React.Reducer<GlobalState, GlobalStateAction>
+	>(globalStateReducer, initialGlobalState)
+
 	useEffect(() => {
 		const options: AosOptions = {
 			once: true,
@@ -19,14 +31,16 @@ export default function App() {
 	}, [])
 
 	return (
-		<Router>
-			<Switch>
-				<Route exact path="/" render={() => <Home />} />
-				<Route path="/dashboard" render={() => <Dashboard />} />
-				<Route path="/login" render={() => <Login />} />
-				<Route path="/register" render={() => <Register />} />
-				<Route path="/*" render={() => <div>404</div>} />
-			</Switch>
-		</Router>
+		<GlobalContext.Provider value={{ globalState, dispatch }}>
+			<Router>
+				<Switch>
+					<Route exact path="/" render={() => <Home />} />
+					<Route path="/dashboard" render={() => <Dashboard />} />
+					<Route path="/login" render={() => <Login />} />
+					<Route path="/register" render={() => <Register />} />
+					<Route path="/*" render={() => <div>404</div>} />
+				</Switch>
+			</Router>
+		</GlobalContext.Provider>
 	)
 }
