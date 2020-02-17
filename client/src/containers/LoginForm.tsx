@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import Form, { Field } from '../components/Form'
 import { decode } from 'jsonwebtoken'
 
 export default function LoginForm() {
+	const history = useHistory()
+
 	useEffect(() => {
-		console.log(decode(document.cookie.slice('authToken='.length)))
+		const loggedInUserData = decode(document.cookie.slice('authToken='.length))
+		if (loggedInUserData) history.push('/dashboard')
 	}, [])
 
 	const fields: Field[] = [
@@ -28,7 +32,7 @@ export default function LoginForm() {
 			fields={fields}
 			method="POST"
 			submitText="Login"
-			redirect="/"
+			redirect="/dashboard"
 		/>
 	)
 }
