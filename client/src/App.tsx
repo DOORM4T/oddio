@@ -5,7 +5,8 @@ import 'aos/dist/aos.css'
 import './main.scss'
 
 import Home from './pages/Home'
-import Account from './pages/Account'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 export default function App() {
 	useEffect(() => {
@@ -21,7 +22,8 @@ export default function App() {
 		<Router>
 			<Switch>
 				<Route exact path="/" render={() => <Home />} />
-				<Route path="/login" render={() => <Account />} />
+				<Route path="/login" render={() => <Login />} />
+				<Route path="/register" render={() => <Register />} />
 				<Route path="/*" render={() => <div>404</div>} />
 			</Switch>
 		</Router>
