@@ -1,8 +1,9 @@
-import React, { useState, ChangeEvent } from 'react'
+import React, { useState, ChangeEvent, FormEvent } from 'react'
 import styles from './Form.module.scss'
 
 export interface Field {
 	name: string
+	placeholder: string
 	type: string
 	required: boolean
 }
@@ -12,6 +13,7 @@ interface FormProps {
 	method: string
 	fields: Field[]
 	submitText: string
+	submitStateValidation?: (formState: any) => void
 }
 
 export default function Form({
@@ -19,6 +21,7 @@ export default function Form({
 	method,
 	fields,
 	submitText,
+	submitStateValidation,
 }: FormProps) {
 	const [formState, setFormState] = useState(
 		Object.fromEntries(fields.map(({ name }) => [name, '']))
@@ -31,20 +34,48 @@ export default function Form({
 		})
 	}
 
+	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+		try {
+			event.preventDefault()
+
+			// Optional custom state validation
+			if (submitStateValidation) submitStateValidation(formState)
+
+			const body = JSON.stringify(formState)
+			const response = await fetch(action, {
+				method,
+				body,
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: '',
+				},
+			})
+			const message = await response.text()
+			console.log(message)
+		} catch (error) {
+			console.error(error.message)
+		}
+	}
+
 	return (
-		<form action={action} method={method} className={styles.form}>
-			{fields.map(({ name, type, required }, index) => {
+		<form
+			action={action}
+			method={method}
+			className={styles.form}
+			onSubmit={handleSubmit}
+		>
+			{fields.map(({ name, placeholder, type, required }, index) => {
 				return (
 					<div key={`${name}-${type}-${index}`}>
 						<input
 							id={name}
 							name={name}
 							type={type}
-							placeholder={name}
+							placeholder={placeholder}
 							required={required}
 							onChange={handleChange}
 						/>
-						<label htmlFor={name}>{name}</label>
+						<label htmlFor={name}>{placeholder}</label>
 					</div>
 				)
 			})}
