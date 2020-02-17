@@ -47,7 +47,6 @@ export default function Form({
 				body,
 				headers: {
 					'Content-Type': 'application/json',
-					Accept: '',
 				},
 			})
 			const message = await response.text()
