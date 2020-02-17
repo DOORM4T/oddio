@@ -1,12 +1,12 @@
-@import "../../variables";
+@import '../../variables';
 
 .button {
-  border-radius: 30px;
-  border: 1px solid black;
-  cursor: pointer;
-  padding: 1rem 6rem;
-  background-color: $accent; // default color
-  font-size: 1.5rem;
-  margin: 0 auto;
-  display: block;
+	border-radius: 30px;
+	border: 1px solid black;
+	cursor: pointer;
+	padding: 1rem 6rem;
+	background-color: $accent; // default color
+	font-size: 1.5rem;
+	margin: 0 auto;
+	display: block;
 }
