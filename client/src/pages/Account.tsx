@@ -26,8 +26,8 @@ export default function Account() {
 					onClick={toggleVisibleForm}
 					style={{
 						all: 'unset',
-						color: '#55FF8D',
 						cursor: 'pointer',
+						fontWeight: 'bolder',
 					}}
 				>
 					{showingLoginForm && 'Register'}
@@ -44,4 +44,5 @@ const toggleSectionStyles = {
 	justifyContent: 'center',
 	alignItems: 'center',
 	marginTop: '1rem',
+	fontSize: '1.2rem',
 }
