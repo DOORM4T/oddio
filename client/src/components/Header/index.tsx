@@ -24,14 +24,16 @@ export default function Header({ title, icon }: HeaderProps) {
 			<h1 id="title" data-aos="zoom-out">
 				{title}{' '}
 				<span role="img" aria-label="Header Icon">
-					{title && icon && icon}
+					{icon}
 				</span>
 			</h1>
-			<div>
-				test
-				<h2>{userInfo && `Hey there, ${userInfo.username}!`}</h2>
-				<button onClick={logout}>{userInfo && 'Logout'}</button>
-			</div>
+			{userInfo && userInfo.username && (
+				<div>
+					test
+					<h2>{`Hey there, ${userInfo.username}!`}</h2>
+					<button onClick={logout}>{userInfo && 'Logout'}</button>
+				</div>
+			)}
 			<HeaderNav />
 		</header>
 	)
