@@ -21,12 +21,12 @@ export default class SoundsController {
 			req.body._id = new ObjectId()
 			req.body.sourceId = new ObjectId()
 
-			console.log(req.body.triggers)
-			if (!Array.isArray(req.body.triggers))
+			if (req.body.triggers && !Array.isArray(req.body.triggers))
 				req.body.triggers = req.body.triggers
 					.replace(/\s/g, '')
 					.split(',')
 					.filter((trigger: string) => trigger !== '')
+			else req.body.triggers = []
 			console.log(req.body.triggers)
 
 			const validatedSound: Sound = await soundSchema.validate(req.body, {
