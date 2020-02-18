@@ -128,7 +128,7 @@ export default class UsersController {
 
 	/**
 	 * @route   /auth/logout
-	 * @method  POST
+	 * @method  DELETE
 	 * @desc    Logout a user
 	 * @access  Validation Required
 	 */
@@ -136,7 +136,7 @@ export default class UsersController {
 		try {
 			res
 				.clearCookie('authToken')
-				.render('pages/index', { message: 'Logged out successfully.' })
+				.json({ message: 'Logged out user successfully' })
 		} catch (error) {
 			res.status(400).send('Unable to logout.')
 			next(error)
@@ -145,7 +145,7 @@ export default class UsersController {
 
 	/**
 	 * @route   /auth/deleteuser
-	 * @method  POST
+	 * @method  DELETE
 	 * @desc    Delete a user
 	 * @access  Validation Required
 	 */

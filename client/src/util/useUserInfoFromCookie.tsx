@@ -7,25 +7,23 @@ export default function useUserInfoFromCookie() {
 	const history = useHistory()
 
 	useEffect(() => {
-		if (!document.cookie) {
-			// Redirect to login page if user isn't signed in
-			history.push('/login')
-			return
-		}
-
 		const decodedUserToken: any = decode(
 			document.cookie.slice('authToken='.length)
 		)
+
 		const { username } = decodedUserToken
 
-		async function getUserData() {
+		const getUserData = async () => {
 			const response = await fetch(`/api/users/${username}`)
 			const data = await response.json()
-			return data
-		}
-		getUserData().then((data) => {
+			if (!data) {
+				await fetch('/auth/deleteauthcookie', { method: 'DELETE' })
+				history.push('/login')
+				return
+			}
 			setUserData(() => data)
-		})
+		}
+		getUserData()
 	}, [])
 
 	return [userData]
