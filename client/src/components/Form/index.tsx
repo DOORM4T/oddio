@@ -15,6 +15,7 @@ export default function Form({
 		Object.fromEntries(fields.map(({ name }) => [name, '']))
 	)
 	const history = useHistory()
+	const formRef = useRef<any>(null)
 	const fileRef = useRef<any>(null)
 
 	const handleChange = (
@@ -35,20 +36,29 @@ export default function Form({
 			// Optional custom validation
 			if (submitStateValidation) submitStateValidation(formState)
 
-			let body
+			let body, response
 			if (customBodyFromMultipartData) {
 				body = customBodyFromMultipartData(formState, fileRef.current.files)
+				response = await fetch(action, {
+					method,
+					body,
+				})
 			} else {
 				// Default form POST
 				body = JSON.stringify(formState)
+				response = await fetch(action, {
+					method,
+					body,
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				})
 			}
-			const response = await fetch(action, {
-				method,
-				body,
-			})
+
 			const responseText = await response.json()
 			console.log(responseText)
 
+			formRef.current.reset()
 			if (redirect && response.status === 200) history.push(redirect)
 		} catch (error) {
 			console.error(error.message)
@@ -61,6 +71,7 @@ export default function Form({
 			method={method}
 			className={styles.form}
 			onSubmit={handleSubmit}
+			ref={formRef}
 		>
 			{fields.map(
 				({ name, placeholder, type, required, options, accept }, index) => {
