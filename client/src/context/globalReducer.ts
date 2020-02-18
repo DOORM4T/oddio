@@ -12,7 +12,7 @@ export const initialGlobalState = {
 	},
 	ui: {
 		theme: 'default',
-		alerts: ['test'],
+		alert: 'nothing',
 	},
 }
 
@@ -26,6 +26,8 @@ export const globalStateReducer = (
 			return { ...state, user: payload }
 		case 'LOGOUT_USER':
 			return { ...state, user: { name: '' } }
+		case 'SET_ALERT':
+			return { ...state, ui: { ...state.ui, alert: payload } }
 		case 'CHANGE_THEME':
 			return { ...state, ui: { ...state.ui, theme: payload } }
 		default:

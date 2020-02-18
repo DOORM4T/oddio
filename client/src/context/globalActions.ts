@@ -26,3 +26,10 @@ export function logoutUserAction(): GlobalStateAction {
 		payload: null,
 	}
 }
+
+export function setAlertAction(alert: string) {
+	return {
+		type: 'SET_ALERT',
+		payload: alert,
+	}
+}
