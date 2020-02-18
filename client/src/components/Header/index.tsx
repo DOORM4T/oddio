@@ -28,7 +28,7 @@ export default function Header({ title, icon }: HeaderProps) {
 				</span>
 			</h1>
 			{userInfo && userInfo.username && (
-				<div>
+				<div data-aos="fade">
 					test
 					<h2>{`Hey there, ${userInfo.username}!`}</h2>
 					<button onClick={logout}>{userInfo && 'Logout'}</button>

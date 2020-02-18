@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent, useRef } from 'react'
+import React, {
+	useState,
+	ChangeEvent,
+	FormEvent,
+	useRef,
+	RefObject,
+} from 'react'
 import { useHistory } from 'react-router-dom'
 import styles from './Form.module.scss'
 
@@ -7,7 +13,7 @@ export default function Form({
 	method,
 	fields,
 	submitText,
-	submitStateValidation,
+	formIsValid,
 	redirect,
 	customBodyFromMultipartData,
 }: FormProps) {
@@ -24,6 +30,10 @@ export default function Form({
 		>
 	) => {
 		const { name, value } = event.target
+
+		// Optional custom validation
+		if (formIsValid && !formIsValid(formRef, formState)) return
+
 		setFormState((prevState) => {
 			return { ...prevState, [name]: value }
 		})
@@ -32,9 +42,6 @@ export default function Form({
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		try {
 			event.preventDefault()
-
-			// Optional custom validation
-			if (submitStateValidation) submitStateValidation(formState)
 
 			let body, response
 			if (customBodyFromMultipartData) {
@@ -55,11 +62,14 @@ export default function Form({
 				})
 			}
 
-			const responseText = await response.json()
-			console.log(responseText)
-
-			formRef.current.reset()
-			if (redirect && response.status === 200) history.push(redirect)
+			const responseData = await response.json()
+			console.log(responseData)
+			if (response.status === 200) {
+				formRef.current.reset()
+				if (redirect) history.push(redirect)
+			} else {
+				if (responseData.message) throw new Error(responseData.message)
+			}
 		} catch (error) {
 			console.error(error.message)
 		}
@@ -74,7 +84,19 @@ export default function Form({
 			ref={formRef}
 		>
 			{fields.map(
-				({ name, placeholder, type, required, options, accept }, index) => {
+				(
+					{
+						name,
+						placeholder,
+						type,
+						options,
+						accept,
+						pattern,
+						invalidTitle,
+						required,
+					},
+					index
+				) => {
 					return (
 						<div key={`${name}-${type}-${index}`}>
 							{type === 'select' ? (
@@ -96,18 +118,20 @@ export default function Form({
 									id={name}
 									name={name}
 									placeholder={placeholder}
-									required={required}
 									onChange={handleChange}
 									maxLength={300}
+									required={required}
 								></textarea>
 							) : type === 'file' ? (
 								<input
 									id={name}
 									name={name}
 									type="file"
-									required={required}
 									accept={accept}
 									ref={fileRef}
+									pattern={pattern}
+									title={invalidTitle}
+									required={required}
 								/>
 							) : (
 								<input
@@ -115,8 +139,10 @@ export default function Form({
 									name={name}
 									type={type}
 									placeholder={placeholder}
-									required={required}
 									onChange={handleChange}
+									pattern={pattern}
+									title={invalidTitle}
+									required={required}
 								/>
 							)}
 							<label htmlFor={name}>{placeholder}</label>
@@ -134,9 +160,11 @@ export interface Field {
 	name: string
 	placeholder: string
 	type: string
-	required: boolean
+	pattern?: string
+	invalidTitle?: string
 	options?: string[]
 	accept?: string
+	required?: boolean
 }
 
 interface FormProps {
@@ -144,7 +172,7 @@ interface FormProps {
 	method: string
 	fields: Field[]
 	submitText: string
-	submitStateValidation?: (formState: any) => void
+	formIsValid?: (formRef: RefObject<any>, formState: any) => boolean
 	customBodyFromMultipartData?: (formState: any, files: File[]) => any
 	redirect?: string
 }

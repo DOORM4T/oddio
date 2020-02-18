@@ -36,6 +36,14 @@
 				opacity: 0;
 			}
 		}
+
+		&:invalid {
+			border-color: red;
+
+			& + label {
+				color: red;
+			}
+		}
 	}
 
 	textarea {

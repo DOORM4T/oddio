@@ -6,27 +6,23 @@ export default function AddSoundForm() {
 		{
 			name: 'category',
 			placeholder: 'category',
-			required: false,
 			type: 'select',
 			options: ['Miscellaneous', 'Creature', 'Item', 'Spell', 'Weapon'],
 		},
-		{ name: 'name', placeholder: 'name', required: true, type: 'text' },
+		{ name: 'name', placeholder: 'name', type: 'text' },
 		{
 			name: 'triggers',
 			placeholder: 'triggers',
-			required: false,
 			type: 'text',
 		},
 		{
 			name: 'description',
 			placeholder: 'description',
-			required: false,
 			type: 'textarea',
 		},
 		{
 			name: 'uploadedSound',
 			placeholder: 'sound upload',
-			required: true,
 			type: 'file',
 			accept: 'audio/*',
 		},
