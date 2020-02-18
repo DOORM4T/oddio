@@ -8,7 +8,7 @@ const soundSchema = yup.object().shape({
 	created: yup.date().default(new Date()),
 	description: yup
 		.string()
-		.max(100)
+		.max(300)
 		.default(''),
 	fame: yup
 		.number()
