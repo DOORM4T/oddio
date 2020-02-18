@@ -37,12 +37,12 @@
 			}
 		}
 
-		&:invalid {
-			border-color: red;
+		&:invalid + label {
+			color: red;
+		}
 
-			& + label {
-				color: red;
-			}
+		&:valid + label {
+			color: green;
 		}
 	}
 
