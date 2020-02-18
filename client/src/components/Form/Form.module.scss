@@ -7,7 +7,9 @@
 	flex-flow: column nowrap;
 	justify-content: center;
 
-	input {
+	input,
+	select,
+	textarea {
 		text-transform: none;
 		display: block;
 		width: 100%;
@@ -36,6 +38,12 @@
 		}
 	}
 
+	textarea {
+		resize: none;
+		height: 120px;
+		padding: 1rem;
+	}
+
 	button[type='submit'] {
 		margin-top: 1rem;
 		background-color: $accent;
@@ -54,8 +62,54 @@
 	}
 
 	input:focus + label,
-	input:not(:placeholder-shown) + label {
+	select:focus + label,
+	input:not(:placeholder-shown) + label,
+	select:not(:placeholder-shown) + label {
 		visibility: visible;
 		transform: translate(0px, -90px) scale(1);
+	}
+
+	textarea:focus + label,
+	textarea:not(:placeholder-shown) + label {
+		visibility: visible;
+		transform: translate(0px, -160px) scale(1);
+	}
+
+	input[type='file'] {
+		all: unset;
+
+		& + label {
+			all: unset;
+			display: block;
+			position: relative;
+			visibility: hidden;
+			opacity: 0;
+			transform: translate(-70px, -26px);
+			background-color: black;
+			color: #fdfdfd;
+			text-align: center;
+			width: 100px;
+			padding: 0.25rem 0.5rem;
+			transition: all 0.3s;
+			border-radius: 4px;
+
+			&:after {
+				content: '';
+				display: block;
+				width: 12px;
+				height: 12px;
+				background-color: black;
+				position: absolute;
+				right: 0;
+				top: 50%;
+				transform: translate(4px, -50%) rotate(45deg);
+			}
+		}
+
+		&:hover + label {
+			visibility: visible;
+			transform: translate(-140px, -26px);
+			opacity: 1;
+		}
 	}
 }
