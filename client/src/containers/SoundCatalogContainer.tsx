@@ -26,10 +26,28 @@ export default function SoundCatalogContainer({
 		getSounds().then((data) => setSounds(() => data))
 	}, [])
 
+	const playSound = (source_id: string) => {
+		fetch(`api/sounds/uploads/${source_id}`, {
+			headers: { 'Content-Type': 'audio/mpeg' },
+		})
+			.then((res) => res.blob())
+			.then((blob) => {
+				const reader = new FileReader()
+				reader.onloadend = (e) => {
+					new Audio(reader.result?.toString()).play()
+				}
+				reader.readAsDataURL(blob)
+			})
+	}
+
 	function renderFunction() {
 		return sounds.map((sound, index) => (
 			<li key={sound._id}>
-				`${sound.name} - ${index}`,
+				<p>
+					{sound.name} - {index} ➡{' '}
+				</p>
+
+				<button onClick={() => playSound(sound.sourceId)}>🔊</button>
 			</li>
 		))
 	}
