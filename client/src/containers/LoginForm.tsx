@@ -16,11 +16,13 @@ export default function LoginForm() {
 			name: 'email',
 			placeholder: 'email',
 			type: 'email',
+			required: true,
 		},
 		{
 			name: 'password',
 			placeholder: 'password',
 			type: 'password',
+			required: true,
 		},
 	]
 
