@@ -9,16 +9,19 @@ export default function Dashboard() {
 	const history = useHistory()
 
 	useEffect(() => {
+		if (!document.cookie) {
+			history.push('/login')
+			return
+		}
+
 		const decodedUserToken: any = decode(
 			document.cookie.slice('authToken='.length)
 		)
-		if (!decodedUserToken) history.push('/login')
+		const { username } = decodedUserToken
 
-		const { email, username } = decodedUserToken
 		async function getUserData() {
 			const response = await fetch(`/api/users/${username}`)
 			const data = await response.json()
-			console.log(data)
 			return data
 		}
 		getUserData().then((data) => {
