@@ -53,7 +53,7 @@ export default class SoundsController {
 			if (error instanceof MongoError) res.status(500)
 			else res.status(400)
 
-			res.send(error.message)
+			res.json({ message: error.message })
 			next(error)
 		}
 	}
@@ -102,9 +102,9 @@ export default class SoundsController {
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500)
 			else res.status(400)
-			res.send(
-				`Unable to delete sound JSON with ID: ${req.params.id} & its corresponding sound upload, if either exists.`
-			)
+			res.json({
+				message: `Unable to delete sound JSON with ID: ${req.params.id}.`,
+			})
 			next(error)
 		}
 	}
@@ -125,7 +125,9 @@ export default class SoundsController {
 			if (!soundJSON) throw new Error(`No data for requested sound`)
 			return res.json(soundJSON)
 		} catch (error) {
-			res.status(400).send(`Unable to get sound with ID: ${req.params.id}`)
+			res
+				.status(400)
+				.json({ message: `Unable to get sound with ID: ${req.params.id}` })
 			next(error)
 		}
 	}
@@ -142,7 +144,7 @@ export default class SoundsController {
 			const sounds = await SoundsModel.getSounds()
 			return res.json(sounds)
 		} catch (error) {
-			res.status(500).send('Unable to get sounds.')
+			res.status(500).json({ message: 'Unable to get sounds.' })
 			next(error)
 		}
 	}
@@ -179,7 +181,9 @@ export default class SoundsController {
 			res.set('Content-Type', 'text/plain')
 			if (error instanceof MongoError) res.status(500)
 			else res.status(400)
-			res.send(`Unable to get uploaded sound with ID: ${req.params.sourceId}.`)
+			res.json({
+				message: `Unable to get uploaded sound with ID: ${req.params.sourceId}.`,
+			})
 			next(error)
 		}
 	}
@@ -221,7 +225,7 @@ export default class SoundsController {
 
 			res.json(updateResult)
 		} catch (error) {
-			res.status(400).send('Unable to update sound JSON.')
+			res.status(400).json({ message: 'Unable to update sound JSON.' })
 			next(error)
 		}
 	}
@@ -274,11 +278,13 @@ export default class SoundsController {
 
 			if (!uploaded) throw new Error('Failed to upload new sound via GridFS.')
 
-			res.send('Updated uploaded sound successfully.')
+			res.json({ message: 'Updated uploaded sound successfully.' })
 		} catch (error) {
 			res
 				.status(400)
-				.send(`Unable to update uploaded sound with ID: ${req.params.sourceId}`)
+				.json({
+					message: `Unable to update uploaded sound with ID: ${req.params.sourceId}`,
+				})
 			next(error)
 		}
 	}
@@ -311,12 +317,14 @@ export default class SoundsController {
 			const incrementedFame = await SoundsModel.incrementFameById(soundId)
 			if (!incrementedFame) throw new MongoError('Failed to increment fame.')
 
-			res.send(`Successfully incremented fame of sound: ${soundId}`)
+			res.json({
+				message: `Successfully incremented fame of sound: ${soundId}`,
+			})
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500)
 			else res.status(400)
 
-			res.send('Unable to increment fame.')
+			res.json({ message: 'Unable to increment fame.' })
 			next(error)
 		}
 	}
@@ -350,12 +358,14 @@ export default class SoundsController {
 			const decrementedFame = await SoundsModel.decrementFameById(soundId)
 			if (!decrementedFame) throw new MongoError('Failed to decrement fame.')
 
-			res.send(`Successfully decremented fame of sound: ${soundId}`)
+			res.json({
+				message: `Successfully decremented fame of sound: ${soundId}`,
+			})
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500)
 			else res.status(400)
 
-			res.send('Unable to decrement fame.')
+			res.json({ message: 'Unable to decrement fame.' })
 			next(error)
 		}
 	}

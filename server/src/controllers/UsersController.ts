@@ -17,7 +17,7 @@ export default class UsersController {
 			const users = await UsersModel.findUsers()
 			res.json(users)
 		} catch (error) {
-			res.status(500).send('Unable to get public list of users.')
+			res.status(500).json({ message: 'Unable to get public list of users.' })
 			next(error)
 		}
 	}
@@ -39,8 +39,8 @@ export default class UsersController {
 			res.json(users)
 		} catch (error) {
 			if (error instanceof MongoError)
-				res.status(400).send('Unable to get user.')
-			else res.status(400).send('User does not exist')
+				res.status(500).json({ message: 'Unable to get user.' })
+			else res.status(400).send({ message: 'User does not exist' })
 			next(error)
 		}
 	}
@@ -80,7 +80,7 @@ export default class UsersController {
 			if (error instanceof MongoError) res.status(500)
 			else res.status(400)
 
-			res.send(error.message)
+			res.json({ message: error.message })
 			next(error)
 		}
 	}
@@ -121,7 +121,7 @@ export default class UsersController {
 				.json(userWithoutPassword)
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500).send(error.message)
-			else res.status(400).send('Invalid email and/or password.')
+			else res.status(400).json({ message: 'Invalid email and/or password.' })
 			next(error)
 		}
 	}
@@ -138,7 +138,7 @@ export default class UsersController {
 				.clearCookie('authToken')
 				.json({ message: 'Logged out user successfully' })
 		} catch (error) {
-			res.status(400).send('Unable to logout.')
+			res.status(400).json({ message: 'Unable to logout.' })
 			next(error)
 		}
 	}
@@ -159,7 +159,7 @@ export default class UsersController {
 			const result = await UsersModel.deleteUser(email, password)
 			res.clearCookie('authToken').json(result)
 		} catch (error) {
-			res.status(400).send('Unable to delete user account.')
+			res.status(400).json({ message: 'Unable to delete user account.' })
 			next(error)
 		}
 	}
