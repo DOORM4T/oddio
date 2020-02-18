@@ -9,7 +9,7 @@ export default function AddSoundForm() {
 			type: 'select',
 			options: ['Miscellaneous', 'Creature', 'Item', 'Spell', 'Weapon'],
 		},
-		{ name: 'name', placeholder: 'name', type: 'text' },
+		{ name: 'name', placeholder: 'name', type: 'text', required: true },
 		{
 			name: 'triggers',
 			placeholder: 'triggers',
@@ -25,6 +25,7 @@ export default function AddSoundForm() {
 			placeholder: 'sound upload',
 			type: 'file',
 			accept: 'audio/*',
+			required: true,
 		},
 	]
 
