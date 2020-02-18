@@ -15,16 +15,19 @@ export default class SoundsController {
 	static async addSound(req: Request, res: Response, next: NextFunction) {
 		try {
 			if (!req.file) throw new Error('No sound file was uploaded.')
-			console.log(req.body)
-			console.log(req.file)
 
 			// res.locals is set during token validation
 			req.body.author = res.locals.username
 			req.body._id = new ObjectId()
 			req.body.sourceId = new ObjectId()
 
+			console.log(req.body.triggers)
 			if (!Array.isArray(req.body.triggers))
-				req.body.triggers = req.body.triggers.split(',')
+				req.body.triggers = req.body.triggers
+					.replace(/\s/g, '')
+					.split(',')
+					.filter((trigger: string) => trigger !== '')
+			console.log(req.body.triggers)
 
 			const validatedSound: Sound = await soundSchema.validate(req.body, {
 				stripUnknown: true,
