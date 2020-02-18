@@ -1,7 +1,7 @@
-import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
+import { Link, useHistory } from 'react-router-dom'
 import styles from './Header.module.scss'
-import { GlobalContext } from '../../context/globalContext'
+import useUserInfoFromCookie from '../../util/useUserInfoFromCookie'
 
 interface HeaderProps {
 	title: string
@@ -9,20 +9,30 @@ interface HeaderProps {
 }
 
 export default function Header({ title, icon }: HeaderProps) {
-	const { globalState, dispatch } = useContext(GlobalContext)
+	const [userInfo] = useUserInfoFromCookie()
+	const history = useHistory()
+
+	const logout = () => {
+		fetch('/auth/logout', { method: 'DELETE' }).then(() => {
+			console.log('logged out')
+			history.push('/login')
+		})
+	}
 
 	return (
 		<header className={styles.header}>
 			<h1 id="title" data-aos="zoom-out">
 				{title}{' '}
 				<span role="img" aria-label="Header Icon">
-					{icon}
+					{title && icon && icon}
 				</span>
 			</h1>
+			<div>
+				test
+				<h2>{userInfo && `Hey there, ${userInfo.username}!`}</h2>
+				<button onClick={logout}>{userInfo && 'Logout'}</button>
+			</div>
 			<HeaderNav />
-			{globalState?.user.username && (
-				<h2>Hey there, {globalState?.user.username}!</h2>
-			)}
 		</header>
 	)
 }
