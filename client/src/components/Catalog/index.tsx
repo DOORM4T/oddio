@@ -12,9 +12,28 @@ export default function Catalog({ items }: CatalogProps) {
 			effect: 'slide',
 			grabCursor: true,
 			centeredSlides: true,
-			slidesPerView: 5,
+			slidesPerView: 3,
+			loop: true,
 			mousewheel: true,
 			keyboard: true,
+			breakpoints: {
+				320: {
+					slidesPerView: 1,
+					spaceBetween: 20,
+				},
+				480: {
+					slidesPerView: 2,
+					spaceBetween: 30,
+				},
+				640: {
+					slidesPerView: 3,
+					spaceBetween: 40,
+				},
+				960: {
+					slidesPerView: 6,
+					spaceBetween: 40,
+				},
+			},
 			pagination: {
 				el: '.swiper-pagination',
 			},
@@ -36,7 +55,7 @@ export default function Catalog({ items }: CatalogProps) {
 			</div>
 			<div className={`swiper-button-prev ${styles.navbutton}`}></div>
 			<div className={`swiper-button-next ${styles.navbutton}`}></div>
-			<div className="swiper-pagination"></div>
+			<div className={`swiper-pagination`}></div>
 		</section>
 	)
 }
