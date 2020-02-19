@@ -8,7 +8,7 @@ export default function Account() {
 	return (
 		<article>
 			<Header title="Register" icon="🔐" />
-			<Spacing spaces={3} />
+			<Spacing spaces={1} />
 			<RegisterForm />
 			<div style={redirectStyles}>
 				<p style={{ marginRight: '1rem' }}>Already have an account?</p>
