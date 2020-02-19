@@ -7,6 +7,10 @@
 	flex-flow: column nowrap;
 	justify-content: center;
 
+	//
+	//  INPUTS
+	//
+
 	input,
 	select,
 	textarea {
@@ -22,7 +26,7 @@
 		font-variant: small-caps;
 		font-weight: 900;
 		border: 1px solid black;
-		margin-bottom: 1rem;
+		margin-top: 1rem;
 
 		&::placeholder {
 			opacity: 1;
@@ -38,7 +42,7 @@
 		}
 
 		&:invalid + label {
-			color: red;
+			color: darkred;
 		}
 
 		&:valid + label {
@@ -52,12 +56,9 @@
 		padding: 1rem;
 	}
 
-	button[type='submit'] {
-		margin-top: 1rem;
-		background-color: $accent;
-		height: 50px;
-		font-size: 2rem;
-	}
+	//
+	// LABEL
+	//
 
 	label {
 		display: block;
@@ -74,13 +75,13 @@
 	input:not(:placeholder-shown) + label,
 	select:not(:placeholder-shown) + label {
 		visibility: visible;
-		transform: translate(0px, -90px) scale(1);
+		transform: translate(0px, -75px) scale(1);
 	}
 
 	textarea:focus + label,
 	textarea:not(:placeholder-shown) + label {
 		visibility: visible;
-		transform: translate(0px, -160px) scale(1);
+		transform: translate(0px, -145px) scale(1);
 	}
 
 	input[type='file'] {
@@ -120,4 +121,10 @@
 			opacity: 1;
 		}
 	}
+}
+
+.errorMessage {
+	color: darkred;
+	font-weight: bold;
+	height: 1rem;
 }

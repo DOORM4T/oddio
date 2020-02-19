@@ -4,9 +4,12 @@ import React, {
 	FormEvent,
 	useRef,
 	RefObject,
+	useContext,
 } from 'react'
 import { useHistory } from 'react-router-dom'
 import styles from './Form.module.scss'
+import Button from '../Button'
+import Spacing from '../Spacing'
 
 export default function Form({
 	action,
@@ -20,6 +23,7 @@ export default function Form({
 	const [formState, setFormState] = useState(
 		Object.fromEntries(fields.map(({ name }) => [name, '']))
 	)
+	const [errorMessage, setErrorMessage] = useState<string>('')
 	const history = useHistory()
 	const formRef = useRef<any>(null)
 	const fileRef = useRef<any>(null)
@@ -72,6 +76,7 @@ export default function Form({
 			}
 		} catch (error) {
 			console.error(error.message)
+			setErrorMessage(() => error.message)
 		}
 	}
 
@@ -150,8 +155,9 @@ export default function Form({
 					)
 				}
 			)}
-
-			<button type="submit">{submitText}</button>
+			<p className={styles.errorMessage}>{errorMessage}</p>
+			<Spacing spaces={2} />
+			<Button type="submit">{submitText}</Button>
 		</form>
 	)
 }
