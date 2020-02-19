@@ -6,10 +6,10 @@ import {
 	initialGlobalState,
 } from './context/globalReducer'
 import { GlobalStateAction } from './context/globalActions'
-
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AOS, { AosOptions } from 'aos'
 import 'aos/dist/aos.css'
+import 'swiper/css/swiper.min.css'
 import './main.scss'
 import Home from './pages/Home'
 import Login from './pages/Login'
