@@ -15,6 +15,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import SoundsCatalog from './pages/SoundsCatalog'
 
 export default function App() {
 	const [globalState, dispatch] = useReducer<
@@ -35,6 +36,7 @@ export default function App() {
 			<Router>
 				<Switch>
 					<Route exact path="/" render={() => <Home />} />
+					<Route path="/catalog" render={() => <SoundsCatalog />} />
 					<Route path="/dashboard" render={() => <Dashboard />} />
 					<Route path="/login" render={() => <Login />} />
 					<Route path="/register" render={() => <Register />} />
