@@ -40,19 +40,18 @@ export default function SoundCatalogContainer({
 			})
 	}
 
-	function renderFunction() {
+	function items() {
 		return sounds.map((sound, index) => (
-			<li key={sound._id}>
+			<>
 				<p>
 					{sound.name} - {index} ➡{' '}
 				</p>
-
 				<button onClick={() => playSound(sound.sourceId)}>🔊</button>
-			</li>
+			</>
 		))
 	}
 
-	return <Catalog render={renderFunction} />
+	return <Catalog items={items()} />
 }
 
 interface Sound {
