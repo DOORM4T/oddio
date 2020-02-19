@@ -11,11 +11,13 @@
 
 .item {
 	display: flex;
+	flex-flow: column;
 	justify-content: center;
 	align-items: center;
 	background-color: $dark;
 	color: #fdfdfd;
 	height: 200px;
+	margin: 1rem;
 }
 
 .navbutton {
