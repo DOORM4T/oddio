@@ -27,7 +27,6 @@ export default class SoundsController {
 					.split(',')
 					.filter((trigger: string) => trigger !== '')
 			else req.body.triggers = []
-			console.log(req.body.triggers)
 
 			const validatedSound: Sound = await soundSchema.validate(req.body, {
 				stripUnknown: true,
@@ -280,11 +279,9 @@ export default class SoundsController {
 
 			res.json({ message: 'Updated uploaded sound successfully.' })
 		} catch (error) {
-			res
-				.status(400)
-				.json({
-					message: `Unable to update uploaded sound with ID: ${req.params.sourceId}`,
-				})
+			res.status(400).json({
+				message: `Unable to update uploaded sound with ID: ${req.params.sourceId}`,
+			})
 			next(error)
 		}
 	}
