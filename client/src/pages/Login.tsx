@@ -8,7 +8,7 @@ export default function Account() {
 	return (
 		<article>
 			<Header title="Login" icon="🔐" />
-			<Spacing spaces={3} />
+			<h1 style={{ textAlign: 'center' }}>Welcome back!</h1>
 			<LoginForm />
 			<div style={toggleSectionStyles}>
 				<p style={{ marginRight: '1rem' }}>Don't have an account?</p>
