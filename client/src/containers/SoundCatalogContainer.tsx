@@ -43,9 +43,8 @@ export default function SoundCatalogContainer({
 	function items() {
 		return sounds.map((sound, index) => (
 			<>
-				<p>
-					{sound.name} - {index} ➡{' '}
-				</p>
+				<p>{sound.name}</p>
+				<p>{sound.author}</p>
 				<button onClick={() => playSound(sound.sourceId)}>🔊</button>
 			</>
 		))
