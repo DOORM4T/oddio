@@ -41,9 +41,10 @@ export default function Header({ title, icon }: HeaderProps) {
 
 function HeaderNav() {
 	const links = [
-		{ to: '/', icon: '🎤' },
+		{ to: '/', icon: '🏠' },
+		{ to: '/catalog', icon: '📇' },
+		{ to: '/dashboard', icon: '👤' },
 		{ to: '/', icon: '⚙' },
-		{ to: '/login', icon: '👤' },
 	]
 
 	return (
