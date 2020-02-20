@@ -1,59 +1,27 @@
-import React, { useEffect } from 'react'
+import React from 'react'
+import Sound from '../../util/sound'
+import playSound from '../../util/playSound'
 import styles from './Catalog.module.scss'
-import Swiper from 'swiper'
 
-interface CatalogProps {
-	items: object[]
-}
-
-export default function Catalog({ items }: CatalogProps) {
-	useEffect(() => {
-		const swiper = new Swiper('.swiper-container', {
-			effect: 'slide',
-			grabCursor: true,
-			centeredSlides: true,
-			slidesPerView: 3,
-			mousewheel: true,
-			breakpoints: {
-				320: {
-					slidesPerView: 1,
-					spaceBetween: 20,
-				},
-				480: {
-					slidesPerView: 2,
-					spaceBetween: 30,
-				},
-				640: {
-					slidesPerView: 3,
-					spaceBetween: 40,
-				},
-				960: {
-					slidesPerView: 6,
-					spaceBetween: 40,
-				},
-			},
-			pagination: {
-				el: '.swiper-pagination',
-			},
-			navigation: {
-				nextEl: '.swiper-button-next',
-				prevEl: '.swiper-button-prev',
-			},
-		})
-	}, [items])
-
+export default function Catalog({ sounds }: CatalogProps) {
 	return (
-		<section className={`${styles.catalog} swiper-container`}>
-			<div className="swiper-wrapper">
-				{items.map((item, index) => (
-					<div className={`${styles.item} swiper-slide`} key={`Item-${index}`}>
-						{item}
+		<section className={styles.catalog}>
+			{sounds.length &&
+				sounds.map((sound) => (
+					<div className={styles.item} key={sound._id}>
+						<p>{sound.name}</p>
+						<p>{sound.author}</p>
+						<p>{sound.description}</p>
+						<p>{sound.category}</p>
+						<p>{sound.triggers}</p>
+						<p>{sound.created}</p>
+						<button onClick={() => playSound(sound.sourceId)}>🔊</button>
 					</div>
 				))}
-			</div>
-			<div className={`swiper-button-prev ${styles.navbutton}`}></div>
-			<div className={`swiper-button-next ${styles.navbutton}`}></div>
-			<div className={`swiper-pagination`}></div>
 		</section>
 	)
+}
+
+interface CatalogProps {
+	sounds: Sound[]
 }
