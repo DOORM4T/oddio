@@ -13,7 +13,6 @@ export default function Catalog({ items }: CatalogProps) {
 			grabCursor: true,
 			centeredSlides: true,
 			slidesPerView: 3,
-			mousewheel: true,
 			breakpoints: {
 				320: {
 					slidesPerView: 1,
