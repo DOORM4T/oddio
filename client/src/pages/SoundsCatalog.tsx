@@ -1,10 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import Spacing from '../components/Spacing'
 import Header from '../components/Header'
 import SearchBar from '../components/SearchBar'
+import SoundCarouselContainer from '../containers/SoundCarouselContainer'
 import SoundCatalogContainer from '../containers/SoundCatalogContainer'
-import Button from '../components/Button'
 
 export default function SoundsCatalog() {
 	return (
@@ -12,15 +11,29 @@ export default function SoundsCatalog() {
 			<Header title="Catalog" icon="📇" />
 			<main data-aos="fade">
 				<Spacing spaces={2} />
-				<SearchBar />
-				<Spacing spaces={1} />
-				<SoundCatalogContainer />
-				<Spacing spaces={5} />
-				<div data-aos="fade">
-					<Link to="/login">
-						<Button>Get Started</Button>
-					</Link>
+				<h1 style={{ marginLeft: '5rem' }}>Featured</h1>
+				<SoundCarouselContainer />
+				<Spacing spaces={2} />
+				<a href="#TheWholeLot" style={{ textAlign: 'center' }}>
+					⏬
+				</a>
+
+				<Spacing spaces={15} />
+				<div
+					style={{
+						position: 'sticky',
+						top: 0,
+						backgroundColor: '#fcfcfc',
+						padding: '1rem',
+						boxShadow: '0 24px 16px rgba(0,0,0,0.5)',
+						borderRadius: '0 0 4px 4px',
+					}}
+					id="TheWholeLot"
+				>
+					<h1 style={{ textAlign: 'center' }}>The Whole Lot</h1>
+					<SearchBar />
 				</div>
+				<SoundCatalogContainer />
 			</main>
 		</article>
 	)
