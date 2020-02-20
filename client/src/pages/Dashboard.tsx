@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import AddSoundForm from '../containers/AddSoundForm'
 import useUserInfoFromCookie from '../util/useUserInfoFromCookie'
-import SoundCatalogContainer from '../containers/SoundCatalogContainer'
+import SoundCarouselContainer from '../containers/SoundCarouselContainer'
 
 export default function Dashboard() {
 	const [userInfo] = useUserInfoFromCookie(true)
@@ -28,11 +28,11 @@ export default function Dashboard() {
 			<AddSoundForm />
 			<section>
 				<h1>My Sounds</h1>
-				<SoundCatalogContainer />
+				<SoundCarouselContainer />
 			</section>
 			<section>
 				<h1>Favorites</h1>
-				<SoundCatalogContainer />
+				<SoundCarouselContainer />
 			</section>
 		</article>
 	)
