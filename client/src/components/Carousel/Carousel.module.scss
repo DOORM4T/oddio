@@ -1,0 +1,26 @@
+@import '../../variables';
+
+.carousel {
+	width: 1920;
+	background-color: #d8d8d8;
+	padding: 1rem 0;
+	height: 280px;
+	overflow: hidden;
+	box-shadow: inset 0 0 16px black;
+}
+
+.item {
+	display: flex;
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	background-color: $dark;
+	color: #fdfdfd;
+	height: 200px;
+	margin: 1rem;
+}
+
+.navbutton {
+	color: $accent;
+	position: absolute;
+}
