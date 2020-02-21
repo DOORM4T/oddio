@@ -10,7 +10,7 @@ export default function FameButtonContainer({
 	soundId,
 	fame,
 }: FameButtonContainerProps) {
-	const [incremented, setIncremented] = useState<boolean>(false)
+	const [displayedFame, setDisplayedFame] = useState<number>(fame)
 
 	const toggleFame = async (
 		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -22,18 +22,18 @@ export default function FameButtonContainer({
 					method: 'PUT',
 				}
 			)
-			if (incrementResponse.status !== 200) {
-				const incrementResponse = await fetch(
+			if (incrementResponse.status === 200)
+				setDisplayedFame((prevFame) => prevFame + 1)
+			else {
+				const decrementResponse = await fetch(
 					`/api/sounds/${soundId}/decrementfame`,
 					{
 						method: 'PUT',
 					}
 				)
-				if (incrementResponse.status !== 200) throw new Error()
-				setIncremented(() => false)
-				return
+				if (decrementResponse.status !== 200) throw new Error()
+				setDisplayedFame((prevFame) => prevFame - 1)
 			}
-			setIncremented(() => true)
 		} catch (error) {
 			console.log(`Failed to change famed status.`)
 		}
@@ -41,7 +41,7 @@ export default function FameButtonContainer({
 
 	return (
 		<div>
-			<span>{fame + Number(incremented)}</span>
+			<span>{displayedFame}</span>
 			<Button onClick={toggleFame}>
 				<span role="img" aria-label="fame">
 					⬆
