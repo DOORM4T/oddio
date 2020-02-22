@@ -19,6 +19,7 @@ const userSchema = yup.object({
 	private: yup.boolean().default(false),
 	sounds: yup.array<string>().default([]),
 	soundsFamed: yup.array<string>().default([]),
+	soundboards: yup.array<Soundboard>().default([]),
 	username: yup
 		.string()
 		.matches(new RegExp(/^[\w\d_]{3,30}$/))
@@ -27,3 +28,9 @@ const userSchema = yup.object({
 
 export type User = yup.InferType<typeof userSchema>
 export default userSchema
+
+export interface Soundboard {
+	_id: ObjectId
+	name: string
+	sounds: [{ name: string; triggers: string[] }]
+}

@@ -163,4 +163,101 @@ export default class UsersController {
 			next(error)
 		}
 	}
+
+	/**
+	 * @route   /users/:username/soundboards/create
+	 * @method  POST
+	 * @body 	soundboardName:string
+	 * @desc    Creates a soundboard
+	 * @access  Validation Required
+	 */
+	static async createSoundboard(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
+		try {
+			const email = res.locals.userEmail
+			const name = req.body.soundboardName
+
+			if (!name) throw new Error('No name provided')
+
+			const created = await UsersModel.createSoundboard(email, name)
+			if (!created)
+				throw new MongoError('Failed to add soundboard to user data')
+
+			return res.json({ message: `Created soundboard: ${name}` })
+		} catch (error) {
+			if (error instanceof MongoError) res.status(500)
+			else res.status(400)
+			res.json({ message: error.message })
+			next(error)
+		}
+	}
+
+	/**
+	 * @route   /users/:username/soundboards/:soundboardId/addsound
+	 * @method  PUT
+	 * @body 	soundId:string
+	 * @desc    Creates a soundboard
+	 * @access  Validation Required
+	 */
+	static async addSoundToSoundboard(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
+		try {
+			const email = res.locals.userEmail
+			const soundboardId = req.params.soundboardId
+			const soundId = req.body.soundId
+
+			if (!soundboardId) throw new Error('No soundboardId provided.')
+			if (!soundId) throw new Error('No sound ID provided.')
+
+			const created = await UsersModel.addSoundToSoundboard(
+				email,
+				soundboardId,
+				soundId
+			)
+			if (!created) throw new MongoError('Failed to add sound to soundboard.')
+
+			return res.json({
+				message: `Added sound ${soundId} to soundboard.`,
+			})
+		} catch (error) {
+			if (error instanceof MongoError) res.status(500)
+			else res.status(400)
+			res.json({ message: error.message })
+			next(error)
+		}
+	}
+
+	/**
+	 * @route   /users/:username/soundboards/:soundboardId
+	 * @method  GET
+	 * @desc    Creates a soundboard
+	 * @access  Validation Required
+	 */
+	static async getSoundboardById(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
+		try {
+			const email = res.locals.userEmail
+			const soundboardId = req.params.soundboardId
+			if (!soundboardId) throw new Error('No soundboardId provided.')
+
+			const soundboard = await UsersModel.getSoundboardById(email, soundboardId)
+			if (!soundboard) throw new MongoError('Failed to get soundboard.')
+
+			return res.json(soundboard)
+		} catch (error) {
+			if (error instanceof MongoError) res.status(500)
+			else res.status(400)
+			res.json({ message: error.message })
+			next(error)
+		}
+	}
 }

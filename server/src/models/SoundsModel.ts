@@ -32,6 +32,12 @@ export default class SoundsModel {
 		return sound
 	}
 
+	static async soundExists(id: ObjectId | string) {
+		const sound: Sound | null = await this.getSoundById(id)
+		if (!sound) return false
+		return true
+	}
+
 	static async getSoundBySourceId(id: ObjectId | string) {
 		const _id = new ObjectId(id)
 		const sound = await this.getSoundByFields({ sourceId: _id })

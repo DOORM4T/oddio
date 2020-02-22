@@ -119,4 +119,72 @@ export default class UsersModel {
 
 		return result.result.nModified > 0
 	}
+
+	static async createSoundboard(userEmail: string, soundboardName: string) {
+		const result = await usersCollection.updateOne(
+			{ email: userEmail },
+			{
+				$push: {
+					soundboards: {
+						_id: new ObjectId(),
+						name: soundboardName,
+						sounds: [],
+					},
+				},
+			}
+		)
+		return result.result.nModified > 0
+	}
+
+	static async addSoundToSoundboard(
+		userEmail: string,
+		soundboardId: string,
+		soundId: string
+	) {
+		const soundExists = await SoundsModel.soundExists(soundId)
+		if (!soundExists) throw new Error('Sound does not exist')
+
+		const result = await usersCollection.updateOne(
+			{
+				email: userEmail,
+				soundboards: {
+					$elemMatch: { _id: new ObjectId(soundboardId) },
+				},
+			},
+			{
+				$push: {
+					'soundboards.$.sounds': new ObjectId(soundId),
+				},
+			}
+		)
+		return result.result.nModified > 0
+	}
+
+	static async getSoundboardById(userEmail: string, soundboardId: string) {
+		const aggregationPipeline = []
+		aggregationPipeline.push({ $match: { email: userEmail } })
+		aggregationPipeline.push({ $project: { soundboards: 1 } })
+		aggregationPipeline.push({ $unwind: '$soundboards' })
+		aggregationPipeline.push({
+			$match: { 'soundboards._id': new ObjectId(soundboardId) },
+		})
+		aggregationPipeline.push({ $unwind: '$soundboards.sounds' })
+		aggregationPipeline.push({
+			$project: { 'soundboards._id': 1, 'soundboards.sounds': 1 },
+		})
+		aggregationPipeline.push({
+			$group: {
+				_id: '$soundboards._id',
+				sounds: { $push: '$soundboards.sounds' },
+			},
+		})
+
+		const cursor = usersCollection.aggregate(aggregationPipeline)
+		const result = await cursor.toArray()
+
+		if (result.length === 0) return { _id: soundboardId, sounds: [] }
+
+		const soundboardData = result[0]
+		return soundboardData
+	}
 }
