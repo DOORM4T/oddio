@@ -2,7 +2,7 @@ import React from 'react'
 import Sound from '../../util/sound'
 import playSound from '../../util/playSound'
 import styles from './Catalog.module.scss'
-import FameButtonContainer from '../../containers/FameButtonContainer'
+import FameButton from '../FameButton/FameButton'
 
 export default function Catalog({ sounds }: CatalogProps) {
 	return (
@@ -19,7 +19,7 @@ export default function Catalog({ sounds }: CatalogProps) {
 							{sound.triggers.join(', ')}
 						</p>
 						<p>{sound.created}</p>
-						<FameButtonContainer soundId={sound._id} fame={sound.fame} />
+						<FameButton soundId={sound._id} fame={sound.fame} />
 						<button onClick={() => playSound(sound.sourceId)}>🔊</button>
 					</div>
 				))}

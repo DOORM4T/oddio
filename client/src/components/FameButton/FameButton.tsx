@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import Button from '../components/Button'
 
 interface FameButtonContainerProps {
 	soundId: string
 	fame: number
 }
 
-export default function FameButtonContainer({
+export default function FameButton({
 	soundId,
 	fame,
 }: FameButtonContainerProps) {
@@ -42,11 +41,11 @@ export default function FameButtonContainer({
 	return (
 		<div>
 			<span>{displayedFame}</span>
-			<Button onClick={toggleFame}>
+			<button onClick={toggleFame}>
 				<span role="img" aria-label="fame">
 					⬆
 				</span>
-			</Button>
+			</button>
 		</div>
 	)
 }
