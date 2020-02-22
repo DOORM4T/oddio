@@ -260,4 +260,43 @@ export default class UsersController {
 			next(error)
 		}
 	}
+
+	/**
+	 * @route   /users/:username/soundboards/:soundboardId/deletesound
+	 * @method  DELETE
+	 * @body 	soundboardId:string, soundId:string
+	 * @desc    Deletes a sound by its ID from a soundboard
+	 * @access  Validation Required
+	 */
+	static async deleteSoundFromSoundboard(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
+		try {
+			const email = res.locals.userEmail
+			const soundboardId = req.params.soundboardId
+			const soundId = req.body.soundId
+
+			if (!soundboardId) throw new Error('No soundboardId provided.')
+			if (!soundId) throw new Error('No sound ID provided.')
+
+			const created = await UsersModel.deleteSoundFromSoundboard(
+				email,
+				soundboardId,
+				soundId
+			)
+			if (!created)
+				throw new MongoError('Failed to delete sound from soundboard.')
+
+			return res.json({
+				message: `Deleted sound ${soundId} from soundboard.`,
+			})
+		} catch (error) {
+			if (error instanceof MongoError) res.status(500)
+			else res.status(400)
+			res.json({ message: error.message })
+			next(error)
+		}
+	}
 }

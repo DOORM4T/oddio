@@ -14,5 +14,6 @@ router.delete('/auth/deleteuser', validate, UsersController.deleteUser)
 router.post('/api/users/:username/soundboards/create', validate, UsersController.createSoundboard)
 router.put('/api/users/:username/soundboards/:soundboardId/addsound', validate, UsersController.addSoundToSoundboard)
 router.get('/api/users/:username/soundboards/:soundboardId', validate, UsersController.getSoundboardById)
+router.delete('/api/users/:username/soundboards/:soundboardId/deletesound', validate, UsersController.deleteSoundFromSoundboard)
 
 export default router

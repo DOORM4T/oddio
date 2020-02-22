@@ -175,7 +175,7 @@ export default class UsersModel {
 		aggregationPipeline.push({
 			$group: {
 				_id: '$soundboards._id',
-				sounds: { $push: '$soundboards.sounds' },
+				sounds: { $addToSet: '$soundboards.sounds' },
 			},
 		})
 
@@ -186,5 +186,29 @@ export default class UsersModel {
 
 		const soundboardData = result[0]
 		return soundboardData
+	}
+
+	static async deleteSoundFromSoundboard(
+		userEmail: string,
+		soundboardId: string,
+		soundId: string
+	) {
+		const result = await usersCollection.updateOne(
+			{
+				email: userEmail,
+				soundboards: {
+					$elemMatch: {
+						_id: new ObjectId(soundboardId),
+						sounds: new ObjectId(soundId),
+					},
+				},
+			},
+			{
+				$pull: {
+					'soundboards.$.sounds': new ObjectId(soundId),
+				},
+			}
+		)
+		return result.result.nModified > 0
 	}
 }
