@@ -21,20 +21,25 @@ export default function Header({ title, icon }: HeaderProps) {
 
 	return (
 		<header className={styles.header}>
-			<h1 id="title" data-aos="zoom-out">
-				{title}{' '}
-				<span role="img" aria-label="Header Icon">
-					{icon}
-				</span>
-			</h1>
-			{userInfo && userInfo.username && (
-				<div data-aos="fade">
-					test
-					<h2>{`Hey there, ${userInfo.username}!`}</h2>
-					<button onClick={logout}>{userInfo && 'Logout'}</button>
-				</div>
-			)}
-			<HeaderNav />
+			<div className={styles.loggedinmessage}>
+				{userInfo && userInfo.username && (
+					<>
+						<p data-aos="fade">{`Hey there, ${userInfo.username}!`}</p>
+						<button onClick={logout} data-aos="fade">
+							{userInfo && 'Logout'}
+						</button>
+					</>
+				)}
+			</div>
+			<div className={styles.navbar}>
+				<h1 id="title" data-aos="zoom-out">
+					{title}{' '}
+					<span role="img" aria-label="Header Icon">
+						{icon}
+					</span>
+				</h1>
+				<HeaderNav />
+			</div>
 		</header>
 	)
 }
