@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
-import useUserInfoFromCookie from '../../util/useUserInfoFromCookie'
+import useUserInfoFromCookie, {
+	Soundboard,
+} from '../../util/useUserInfoFromCookie'
 import Sound from '../../util/sound'
+import styles from './SoundBoards.module.scss'
+import playSound from '../../util/playSound'
 
 interface SoundBoardProps {
 	reactToTriggers: boolean
@@ -26,8 +30,8 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 					Promise.all(responses.map((response) => response.json()))
 				)
 				.then((data) => {
-					setSoundboardSoundData([
-						...soundboardSoundData.filter(
+					setSoundboardSoundData((prevSoundboardSoundData) => [
+						...prevSoundboardSoundData.filter(
 							(soundboardData) =>
 								soundboardData.soundboardName !== soundboard.name
 						),
@@ -44,25 +48,7 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 				return (
 					<div key={soundBoard._id}>
 						<h2>{soundBoard.name}</h2>
-						<ul>
-							<li>
-								{soundboardSoundData.some(
-									(soundboardData) =>
-										soundboardData.soundboardName === soundBoard.name
-								) ? (
-									<div>
-										{JSON.stringify(
-											soundboardSoundData.find(
-												(soundboardData) =>
-													soundboardData.soundboardName === soundBoard.name
-											)
-										)}
-									</div>
-								) : (
-									''
-								)}
-							</li>
-						</ul>
+						{SoundsListFromSoundboardName(soundboardSoundData, soundBoard.name)}
 					</div>
 				)
 			})}
@@ -73,4 +59,47 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 interface SoundboardSounds {
 	soundboardName: string
 	sounds: Sound[]
+}
+
+function SoundsListFromSoundboardName(
+	soundboardSoundData: SoundboardSounds[],
+	soundboardName: string
+) {
+	const soundboard = soundboardSoundData.find(
+		(soundboardSounds) => soundboardSounds.soundboardName === soundboardName
+	)
+	if (!soundboard) return null
+
+	const sounds = soundboard.sounds
+	return (
+		<ul className={styles['soundboard-list']}>
+			{sounds.map((sound, index) => (
+				<li key={`${soundboardName}-list-item-${sound._id}-${index}`}>
+					<div className={styles['soundboard-list-sound']}>
+						<div>
+							<p>{sound.name}</p>
+							<p>Author: {sound.author}</p>
+							<p>Category: {sound.category}</p>
+							<p>Created: {new Date(sound.created).toDateString()}</p>
+							<p>{sound.description}</p>
+							<p>Fame: {sound.fame}</p>
+							{sound.triggers.length > 0 ? (
+								<p>{sound.triggers.join(', ')}</p>
+							) : null}
+							<button onClick={() => playSound(sound.sourceId)}>
+								<span role="img" aria-label="Remove from soundboard">
+									🔊
+								</span>
+							</button>
+						</div>
+						<button>
+							<span role="img" aria-label="Remove from soundboard">
+								❌
+							</span>
+						</button>
+					</div>
+				</li>
+			))}
+		</ul>
+	)
 }
