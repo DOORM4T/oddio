@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { decode } from 'jsonwebtoken'
+import Sound from '../util/sound'
 
 export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 	const [userData, setUserData] = useState<User>({
@@ -9,6 +10,7 @@ export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 		joined: '',
 		private: true,
 		sounds: [],
+		soundboards: [],
 		soundsFamed: [],
 		username: '',
 	})
@@ -42,12 +44,19 @@ export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 	return [userData]
 }
 
-type User = {
+export type User = {
 	_id: string
 	username: string
-	soundsFamed: string[]
-	sounds: string[]
+	soundsFamed: Sound[]
+	soundboards: Soundboard[]
+	sounds: Sound[]
 	private: boolean
 	email: string
 	joined: string
+}
+
+export interface Soundboard {
+	_id: string
+	name: string
+	sounds: Sound[]
 }

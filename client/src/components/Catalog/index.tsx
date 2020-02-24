@@ -3,6 +3,7 @@ import Sound from '../../util/sound'
 import playSound from '../../util/playSound'
 import styles from './Catalog.module.scss'
 import FameButton from '../FameButton/FameButton'
+import AddToSoundboard from '../AddToSoundboard'
 
 export default function Catalog({ sounds }: CatalogProps) {
 	return (
@@ -19,6 +20,7 @@ export default function Catalog({ sounds }: CatalogProps) {
 							{sound.triggers.join(', ')}
 						</p>
 						<p>{sound.created}</p>
+						<AddToSoundboard soundId={sound._id} />
 						<FameButton soundId={sound._id} fame={sound.fame} />
 						<button onClick={() => playSound(sound.sourceId)}>🔊</button>
 					</div>
