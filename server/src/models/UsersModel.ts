@@ -55,14 +55,6 @@ export default class UsersModel {
 		const passwordIsValid = await compare(password, user.password)
 		if (!passwordIsValid) throw new Error('Invalid password.')
 
-		await user.soundsFamed.forEach(async (soundId) => {
-			await SoundsModel.decrementFameById(soundId)
-			await usersCollection.updateMany(
-				{ soundsFamed: { $in: [soundId] } },
-				{ $pull: { soundsFamed: { $in: [soundId] } } }
-			)
-		})
-
 		user.sounds.forEach(async (soundId) => {
 			await SoundsModel.deleteSoundJSONById(soundId)
 		})
@@ -120,6 +112,13 @@ export default class UsersModel {
 		return result.result.nModified > 0
 	}
 
+	static async removeFromFamedForAllUsers(soundId: ObjectId | string) {
+		usersCollection.updateMany(
+			{ soundsFamed: { $in: [soundId] } },
+			{ $pull: { soundsFamed: { $in: [soundId] } } }
+		)
+	}
+
 	static async createSoundboard(userEmail: string, soundboardName: string) {
 		const result = await usersCollection.updateOne(
 			{ email: userEmail },
@@ -152,7 +151,7 @@ export default class UsersModel {
 				},
 			},
 			{
-				$push: {
+				$addToSet: {
 					'soundboards.$.sounds': new ObjectId(soundId),
 				},
 			}
@@ -210,5 +209,13 @@ export default class UsersModel {
 			}
 		)
 		return result.result.nModified > 0
+	}
+
+	static async removeFromSoundboardsForAllUsers(soundId: ObjectId | string) {
+		soundId = new ObjectId(soundId)
+		await usersCollection.updateMany(
+			{ soundboards: { $elemMatch: { sounds: soundId } } },
+			{ $pull: { 'soundboards.$[].sounds': soundId } }
+		)
 	}
 }

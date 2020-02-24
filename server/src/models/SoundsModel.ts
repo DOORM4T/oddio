@@ -9,6 +9,7 @@ import {
 import { Readable } from 'stream'
 import { Response } from 'express'
 import { Sound } from './schemas/soundSchema'
+import UsersModel from './UsersModel'
 
 let soundsCollection: Collection, uploadedSoundsBucket: GridFSBucket
 export default class SoundsModel {
@@ -59,6 +60,8 @@ export default class SoundsModel {
 	static async deleteSoundJSONById(id: ObjectId | string) {
 		const _id = new ObjectId(id)
 		const deletionResult = await soundsCollection.deleteOne({ _id })
+		await UsersModel.removeFromFamedForAllUsers(id)
+		await UsersModel.removeFromSoundboardsForAllUsers(id)
 		return deletionResult
 	}
 
