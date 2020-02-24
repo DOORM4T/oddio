@@ -47,7 +47,6 @@ export default function AddSoundForm() {
 			fields={fields}
 			method="POST"
 			submitText="Upload"
-			redirect="/dashboard"
 			customBodyFromMultipartData={createMultipartBody}
 		/>
 	)

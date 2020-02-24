@@ -71,6 +71,7 @@ export default function Form({
 			if (response.status === 200) {
 				formRef.current.reset()
 				if (redirect) history.push(redirect)
+				else window.location.reload()
 			} else {
 				if (responseData.message) throw new Error(responseData.message)
 			}
