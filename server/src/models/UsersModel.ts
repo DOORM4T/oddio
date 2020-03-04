@@ -211,6 +211,27 @@ export default class UsersModel {
 		return result.result.nModified > 0
 	}
 
+	static async deleteSoundboard(userEmail: string, soundboardId: string) {
+		const result = await usersCollection.updateOne(
+			{
+				email: userEmail,
+				soundboards: {
+					$elemMatch: {
+						_id: new ObjectId(soundboardId),
+					},
+				},
+			},
+			{
+				$pull: {
+					soundboards: {
+						_id: new ObjectId(soundboardId),
+					},
+				},
+			}
+		)
+		return result.result.nModified > 0
+	}
+
 	static async removeFromSoundboardsForAllUsers(soundId: ObjectId | string) {
 		soundId = new ObjectId(soundId)
 		await usersCollection.updateMany(
