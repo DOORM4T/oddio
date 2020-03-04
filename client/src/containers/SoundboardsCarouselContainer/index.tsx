@@ -19,6 +19,7 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 		SoundboardSounds[]
 	>([])
 	const [isLoading, setIsLoading] = useState<boolean>(true)
+	const [inDeleteMode, setInDeleteMode] = useState<boolean>(false)
 
 	useEffect(() => {
 		if (userInfo.soundboards.length === 0) return
@@ -47,8 +48,23 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 		setIsLoading(false)
 	}, [userInfo])
 
+	const deleteSoundboard = (soundboardId: string) => {
+		return async () => {
+			const route = `/api/users/${userInfo.username}/soundboards/${soundboardId}/deletesoundboard`
+			const response = await fetch(route, {
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+			})
+
+			if (response.status === 200) window.location.reload()
+		}
+	}
+
 	return (
 		<section>
+			<button onClick={() => setInDeleteMode((prevState) => !prevState)}>
+				Edit
+			</button>
 			{!isLoading ? (
 				userInfo.soundboards.map((soundBoard) => {
 					return (
@@ -58,6 +74,15 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 							data-aos="fade-right"
 						>
 							<button
+								onClick={deleteSoundboard(soundBoard._id)}
+								className={styles.deletebutton}
+								style={{ display: inDeleteMode ? 'inline' : 'none' }}
+							>
+								<span role="img" aria-label="Delete Soundboard">
+									❌
+								</span>
+							</button>
+							<button
 								onClick={function(e: any) {
 									e.target.classList.toggle(styles.expanded)
 								}}
@@ -66,8 +91,6 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 								<span>{soundBoard.sounds.length}</span>
 								{soundBoard.name}
 							</button>
-
-							<hr />
 							<div>
 								{soundBoard.sounds.length > 0 ? (
 									SoundsList(soundboardSoundData, soundBoard, userInfo)
