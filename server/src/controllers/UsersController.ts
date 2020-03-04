@@ -264,7 +264,7 @@ export default class UsersController {
 	/**
 	 * @route   /users/:username/soundboards/:soundboardId/deletesound
 	 * @method  DELETE
-	 * @body 	soundboardId:string, soundId:string
+	 * @body 	soundId:string
 	 * @desc    Deletes a sound by its ID from a soundboard
 	 * @access  Validation Required
 	 */
