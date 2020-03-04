@@ -4,24 +4,19 @@ import Header from '../components/Header'
 import SearchBar from '../components/SearchBar'
 import SoundCarouselContainer from '../containers/SoundCarouselContainer'
 import SoundCatalogContainer from '../containers/SoundCatalogContainer'
-import SoundBoards from '../components/SoundBoards'
 
 export default function SoundsCatalog() {
 	return (
 		<article>
 			<Header title="Catalog" icon="📇" />
 			<main data-aos="fade">
-				<SoundBoards reactToTriggers={true} />
 				<div>
 					<Spacing spaces={2} />
 					<h1 style={{ marginLeft: '5rem' }}>Featured</h1>
 					<SoundCarouselContainer />
-					<Spacing spaces={2} />
-					<a href="#TheWholeLot" style={{ textAlign: 'center' }}>
-						⏬
-					</a>
-
 					<Spacing spaces={15} />
+					<hr />
+					<Spacing spaces={5} />
 					<div
 						style={{
 							position: 'sticky',
