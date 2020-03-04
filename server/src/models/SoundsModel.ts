@@ -21,8 +21,29 @@ export default class SoundsModel {
 	}
 
 	// COMMON MONGODB DRIVER METHODS
-	static async getSounds() {
-		const cursor: Cursor = await soundsCollection.find()
+	static async getSounds(query: any) {
+		// name, category, author
+		const queryValidation = new RegExp(/(name|category|author)/, 'i')
+		const validQueries = Object.keys(query).filter((value: any) => {
+			return queryValidation.test(value)
+		})
+		const fields: any = {}
+		validQueries.forEach((value: any) => (fields[value] = query[value]))
+
+		// Used on the start, count, sort, sortBy
+		let { start = 0, count = 10, sort = -1, sortBy = 'fame' } = query
+
+		start = Number(start)
+		count = Number(count)
+
+		if (sort === 'desc') sort = -1
+		else if (sort === 'asc') sort = 1
+
+		const cursor: Cursor = await soundsCollection
+			.find()
+			.skip(start)
+			.limit(count)
+			.sort({ [sortBy]: sort })
 		const sounds: Sound[] | null = await cursor.toArray()
 		return sounds
 	}

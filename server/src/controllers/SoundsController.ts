@@ -135,12 +135,13 @@ export default class SoundsController {
 	 * @route 	/api/sounds
 	 * @method	GET
 	 * @desc	Get a paginated list of available sounds
+	 * @query	name, category, author , start, count, sort
 	 * @access	Public
 	 */
 	static async getSounds(req: Request, res: Response, next: NextFunction) {
 		try {
 			// TODO: Pagination & Querying
-			const sounds = await SoundsModel.getSounds()
+			const sounds = await SoundsModel.getSounds(req.query)
 			return res.json(sounds)
 		} catch (error) {
 			res.status(500).json({ message: 'Unable to get sounds.' })
