@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import useUserInfoFromCookie, {
 	Soundboard,
+	User,
 } from '../../util/useUserInfoFromCookie'
 import Sound from '../../util/sound'
-import styles from './SoundBoards.module.scss'
 import playSound from '../../util/playSound'
+import Carousel from '../../components/Carousel'
+import styles from './Soundboards.module.scss'
+import Spinner from '../../components/Spinner'
 
 interface SoundBoardProps {
 	reactToTriggers: boolean
@@ -15,10 +18,12 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 	const [soundboardSoundData, setSoundboardSoundData] = useState<
 		SoundboardSounds[]
 	>([])
+	const [isLoading, setIsLoading] = useState<boolean>(true)
 
 	useEffect(() => {
 		if (userInfo.soundboards.length === 0) return
-		userInfo.soundboards.forEach((soundboard) => {
+		setIsLoading(true)
+		userInfo.soundboards.forEach((soundboard, index) => {
 			if (!soundboard.sounds || soundboard.sounds.length === 0) return
 			const soundsDataPromises = soundboard.sounds.map((soundId) =>
 				fetch(`/api/sounds/${soundId}`, {
@@ -39,20 +44,44 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 					])
 				})
 		})
+		setIsLoading(false)
 	}, [userInfo])
 
 	return (
-		<aside>
-			<h1>Soundboards</h1>
-			{userInfo.soundboards.map((soundBoard) => {
-				return (
-					<div key={soundBoard._id}>
-						<h2>{soundBoard.name}</h2>
-						{SoundsListFromSoundboardName(soundboardSoundData, soundBoard.name)}
-					</div>
-				)
-			})}
-		</aside>
+		<section>
+			{!isLoading ? (
+				userInfo.soundboards.map((soundBoard) => {
+					return (
+						<div
+							className={styles.soundboard}
+							key={soundBoard._id}
+							data-aos="fade-right"
+						>
+							<button
+								onClick={function(e: any) {
+									e.target.classList.toggle(styles.expanded)
+								}}
+								className={styles.dropdown}
+							>
+								<span>{soundBoard.sounds.length}</span>
+								{soundBoard.name}
+							</button>
+
+							<hr />
+							<div>
+								{soundBoard.sounds.length > 0 ? (
+									SoundsList(soundboardSoundData, soundBoard, userInfo)
+								) : (
+									<p>There's nothing here... yet!</p>
+								)}
+							</div>
+						</div>
+					)
+				})
+			) : (
+				<Spinner icon="🐧" />
+			)}
+		</section>
 	)
 }
 
@@ -61,21 +90,38 @@ interface SoundboardSounds {
 	sounds: Sound[]
 }
 
-function SoundsListFromSoundboardName(
+function SoundsList(
 	soundboardSoundData: SoundboardSounds[],
-	soundboardName: string
+	soundBoard: Soundboard,
+	userInfo: User
 ) {
 	const soundboard = soundboardSoundData.find(
-		(soundboardSounds) => soundboardSounds.soundboardName === soundboardName
+		(soundboardSounds) => soundboardSounds.soundboardName === soundBoard.name
 	)
-	if (!soundboard) return null
 
-	const sounds = soundboard.sounds
+	const { username } = userInfo
+
+	if (!soundboard || !username) return null
+	const deleteFromSoundboard = (soundId: string) => {
+		return async () => {
+			const body = JSON.stringify({ soundId })
+			const response = await fetch(
+				`/api/users/${username}/soundboards/${soundBoard._id}/deletesound`,
+				{
+					method: 'DELETE',
+					body,
+					headers: { 'Content-Type': 'application/json' },
+				}
+			)
+			if (response.status === 200) window.location.reload()
+		}
+	}
+
 	return (
-		<ul className={styles['soundboard-list']}>
-			{sounds.map((sound, index) => (
-				<li key={`${soundboardName}-list-item-${sound._id}-${index}`}>
-					<div className={styles['soundboard-list-sound']}>
+		<Carousel
+			items={soundboard.sounds.map((sound, index) => (
+				<li key={`${soundBoard.name}-list-item-${sound._id}-${index}`}>
+					<div>
 						<div>
 							<p>{sound.name}</p>
 							<p>Author: {sound.author}</p>
@@ -87,12 +133,12 @@ function SoundsListFromSoundboardName(
 								<p>{sound.triggers.join(', ')}</p>
 							) : null}
 							<button onClick={() => playSound(sound.sourceId)}>
-								<span role="img" aria-label="Remove from soundboard">
+								<span role="img" aria-label="Play sound">
 									🔊
 								</span>
 							</button>
 						</div>
-						<button>
+						<button onClick={deleteFromSoundboard(sound._id)}>
 							<span role="img" aria-label="Remove from soundboard">
 								❌
 							</span>
@@ -100,6 +146,6 @@ function SoundsListFromSoundboardName(
 					</div>
 				</li>
 			))}
-		</ul>
+		/>
 	)
 }

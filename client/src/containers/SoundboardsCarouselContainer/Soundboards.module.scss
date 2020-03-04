@@ -1,0 +1,56 @@
+@import '../../variables';
+
+.soundboard {
+	margin: 1rem;
+}
+
+.dropdown {
+	all: unset;
+	cursor: pointer;
+	padding: 0.25rem 1rem;
+	border-radius: 4px 4px 0 0;
+
+	& > span {
+		margin-right: 1rem;
+		background-color: $accent;
+		padding: 0 0.5rem;
+		border-radius: 4px;
+		transition: all 0.3s;
+	}
+
+	& ~ div {
+		min-height: 0;
+		max-height: 0;
+		opacity: 0;
+		pointer-events: none;
+		transition: min-height 0.3s;
+	}
+
+	& ~ div > p {
+		margin: 1rem 0;
+		text-align: center;
+		opacity: 0;
+		transition: opacity 1s;
+	}
+}
+
+.expanded {
+	& > span {
+		background-color: white;
+		color: black;
+	}
+	& {
+		background-color: $accent;
+
+		& ~ div {
+			min-height: 30px;
+			max-height: 280px;
+			opacity: 1;
+			pointer-events: all;
+		}
+
+		& ~ div > p {
+			opacity: 1;
+		}
+	}
+}
