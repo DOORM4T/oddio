@@ -3,32 +3,44 @@ import Header from '../components/Header'
 import AddSoundForm from '../containers/AddSoundForm'
 import SoundCarouselContainer from '../containers/SoundCarouselContainer'
 import CreateSoundboardFormContainer from '../containers/CreateSoundboardFormContainer'
-import SoundBoards from '../components/SoundBoards'
+import SoundBoards from '../containers/SoundboardsCarouselContainer/index'
 import Spacing from '../components/Spacing'
 import useUserInfoFromCookie from '../util/useUserInfoFromCookie'
 
 export default function Dashboard() {
 	const [userInfo] = useUserInfoFromCookie(true)
 
+	if (!userInfo) return null
+
 	return (
 		<article>
 			<Header title="Dashboard" icon="👤" />
-			<AddSoundForm />
-			<Spacing spaces={15} />
 			<section>
 				<h1>My Soundboards</h1>
 				<SoundBoards reactToTriggers={false} />
 				<CreateSoundboardFormContainer />
 			</section>
-			<Spacing spaces={15} />
+			<Spacing spaces={5} />
+			<hr />
+			<Spacing spaces={2} />
 			<section>
 				<h1>My Sounds</h1>
-				<SoundCarouselContainer />
+				<SoundCarouselContainer query={`?author=${userInfo.username}`} />
 			</section>
 			<Spacing spaces={2} />
 			<section>
 				<h1>Favorites</h1>
 				<SoundCarouselContainer />
+			</section>
+			<Spacing spaces={5} />
+			<hr />
+			<Spacing spaces={5} />
+			<section>
+				<h1 id="upload" style={{ textAlign: 'center' }}>
+					Upload a Sound
+				</h1>
+				<Spacing spaces={2} />
+				<AddSoundForm />
 			</section>
 			<Spacing spaces={2} />
 		</article>
