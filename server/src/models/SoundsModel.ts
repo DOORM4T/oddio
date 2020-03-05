@@ -31,19 +31,19 @@ export default class SoundsModel {
 		validQueries.forEach((value: any) => (fields[value] = query[value]))
 
 		// Used on the start, count, sort, sortBy
-		let { start = 0, count = 10, sort = -1, sortBy = 'fame' } = query
+		let { start = 0, count = 10, order = -1, sort = 'fame' } = query
 
 		start = Number(start)
 		count = Number(count)
 
-		if (sort === 'desc') sort = -1
-		else if (sort === 'asc') sort = 1
+		if (order === 'desc') order = -1
+		else if (order === 'asc') order = 1
 
 		const cursor: Cursor = await soundsCollection
 			.find()
 			.skip(start)
 			.limit(count)
-			.sort({ [sortBy]: sort })
+			.sort({ [sort]: order })
 		const sounds: Sound[] | null = await cursor.toArray()
 		return sounds
 	}
