@@ -45,7 +45,11 @@ export default function Catalog({ items }: CatalogProps) {
 		<section className={`${styles.carousel} swiper-container`}>
 			<div className="swiper-wrapper">
 				{items.map((item, index) => (
-					<div className={`${styles.item} swiper-slide`} key={`Item-${index}`}>
+					<div
+						className={`${styles.item} swiper-slide`}
+						key={`Item-${index}`}
+						data-aos="zoom-in"
+					>
 						{item}
 					</div>
 				))}

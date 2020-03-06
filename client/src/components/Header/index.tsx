@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import styles from './Header.module.scss'
 import { GlobalContext } from '../../context/globalContext'
+import { logoutUserAction } from '../../context/globalActions'
 
 interface HeaderProps {
 	title: string
@@ -9,7 +10,7 @@ interface HeaderProps {
 }
 
 export default function Header({ title, icon }: HeaderProps) {
-	const { globalState } = useContext(GlobalContext)
+	const { globalState, dispatch } = useContext(GlobalContext)
 	const username = globalState?.user.username
 
 	const history = useHistory()
@@ -17,6 +18,7 @@ export default function Header({ title, icon }: HeaderProps) {
 	const logout = () => {
 		fetch('/auth/logout', { method: 'DELETE' }).then(() => {
 			console.log('logged out')
+			dispatch && dispatch(logoutUserAction())
 			history.push('/login')
 		})
 	}
