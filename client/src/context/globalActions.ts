@@ -1,16 +1,8 @@
+import { User } from '../util/types/User.type'
+
 export type GlobalStateAction = {
 	type: string
 	payload: any
-}
-
-export type User = {
-	_id: string
-	username: string
-	soundsFamed: string[]
-	sounds: string[]
-	private: boolean
-	email: string
-	joined: string
 }
 
 export function loginUserAction(userData: User): GlobalStateAction {
@@ -31,5 +23,12 @@ export function setAlertAction(alert: string) {
 	return {
 		type: 'SET_ALERT',
 		payload: alert,
+	}
+}
+
+export function setSoundsSearchQuery(queryString: string) {
+	return {
+		type: 'SET_SOUNDS_QUERY',
+		payload: queryString,
 	}
 }

@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import styles from './Header.module.scss'
-import useUserInfoFromCookie from '../../util/useUserInfoFromCookie'
+import { GlobalContext } from '../../context/globalContext'
 
 interface HeaderProps {
 	title: string
@@ -9,7 +9,9 @@ interface HeaderProps {
 }
 
 export default function Header({ title, icon }: HeaderProps) {
-	const [userInfo] = useUserInfoFromCookie()
+	const { globalState } = useContext(GlobalContext)
+	const username = globalState?.user.username
+
 	const history = useHistory()
 
 	const logout = () => {
@@ -22,11 +24,11 @@ export default function Header({ title, icon }: HeaderProps) {
 	return (
 		<header className={styles.header}>
 			<div className={styles.loggedinmessage}>
-				{userInfo && userInfo.username && (
+				{username && (
 					<>
-						<p data-aos="fade">{`Hey there, ${userInfo.username}!`}</p>
+						<p data-aos="fade">{`Hey there, ${username}!`}</p>
 						<button onClick={logout} data-aos="fade">
-							{userInfo && 'Logout'}
+							{username && 'Logout'}
 						</button>
 					</>
 				)}

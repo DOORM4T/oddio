@@ -140,7 +140,6 @@ export default class SoundsController {
 	 */
 	static async getSounds(req: Request, res: Response, next: NextFunction) {
 		try {
-			// TODO: Pagination & Querying
 			const sounds = await SoundsModel.getSounds(req.query)
 			return res.json(sounds)
 		} catch (error) {

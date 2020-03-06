@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import Form, { Field } from '../components/Form'
-import { decode } from 'jsonwebtoken'
+import { GlobalContext } from '../context/globalContext'
 
 export default function LoginForm() {
+	const { globalState } = useContext(GlobalContext)
+	const username = globalState?.user.username
+
 	const history = useHistory()
 
 	useEffect(() => {
-		const loggedInUserData = decode(document.cookie.slice('authToken='.length))
-		if (loggedInUserData) history.push('/dashboard')
+		if (username) history.push('/dashboard')
 	}, [])
 
 	const fields: Field[] = [

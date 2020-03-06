@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useRef, useContext } from 'react'
-import useUserInfoFromCookie, {
-	Soundboard,
-	User,
-} from '../../util/useUserInfoFromCookie'
-import Sound from '../../util/sound'
+import React, { useState, useEffect, useContext } from 'react'
 import playSound from '../../util/playSound'
 import Carousel from '../../components/Carousel'
 import styles from './Soundboards.module.scss'
 import Spinner from '../../components/Spinner'
+import { Soundboard } from '../../util/types/Soundboard.type'
+import { User } from '../../util/types/User.type'
+import { Sound } from '../../util/types/Sound.type'
+import { GlobalContext } from '../../context/globalContext'
 
 interface SoundBoardProps {
 	reactToTriggers: boolean
 }
 
 export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
-	const [userInfo] = useUserInfoFromCookie()
+	const { globalState } = useContext(GlobalContext)
+	const soundboards = globalState?.user.soundboards
+
 	const [soundboardSoundData, setSoundboardSoundData] = useState<
 		SoundboardSounds[]
 	>([])
@@ -22,11 +23,11 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 	const [inDeleteMode, setInDeleteMode] = useState<boolean>(false)
 
 	useEffect(() => {
-		if (userInfo.soundboards.length === 0) return
+		if (!soundboards || soundboards.length === 0) return
 		setIsLoading(true)
-		userInfo.soundboards.forEach((soundboard, index) => {
+		soundboards.forEach((soundboard) => {
 			if (!soundboard.sounds || soundboard.sounds.length === 0) return
-			const soundsDataPromises = soundboard.sounds.map((soundId) =>
+			const soundsDataPromises = soundboard.sounds.map((soundId: any) =>
 				fetch(`/api/sounds/${soundId}`, {
 					headers: { 'Content-Type': 'application/json' },
 				})
@@ -46,11 +47,11 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 				})
 		})
 		setIsLoading(false)
-	}, [userInfo])
+	}, [soundboards])
 
 	const deleteSoundboard = (soundboardId: string) => {
 		return async () => {
-			const route = `/api/users/${userInfo.username}/soundboards/${soundboardId}/deletesoundboard`
+			const route = `/api/users/${globalState?.user.username}/soundboards/${soundboardId}/deletesoundboard`
 			const response = await fetch(route, {
 				method: 'DELETE',
 				headers: { 'Content-Type': 'application/json' },
@@ -65,8 +66,8 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 			<button onClick={() => setInDeleteMode((prevState) => !prevState)}>
 				Edit
 			</button>
-			{!isLoading ? (
-				userInfo.soundboards.map((soundBoard) => {
+			{!isLoading && soundboards ? (
+				soundboards.map((soundBoard) => {
 					return (
 						<div
 							className={styles.soundboard}
@@ -93,7 +94,7 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 							</button>
 							<div>
 								{soundBoard.sounds.length > 0 ? (
-									SoundsList(soundboardSoundData, soundBoard, userInfo)
+									SoundsList(soundboardSoundData, soundBoard, globalState?.user)
 								) : (
 									<p>There's nothing here... yet!</p>
 								)}
@@ -116,13 +117,13 @@ interface SoundboardSounds {
 function SoundsList(
 	soundboardSoundData: SoundboardSounds[],
 	soundBoard: Soundboard,
-	userInfo: User
+	userInfo: User | undefined
 ) {
 	const soundboard = soundboardSoundData.find(
 		(soundboardSounds) => soundboardSounds.soundboardName === soundBoard.name
 	)
 
-	const { username } = userInfo
+	const username = userInfo?.username
 
 	if (!soundboard || !username) return null
 	const deleteFromSoundboard = (soundId: string) => {

@@ -94,6 +94,7 @@ export default class UsersController {
 	 */
 	static async loginUser(req: Request, res: Response, next: NextFunction) {
 		try {
+			req.cookies = ''
 			let { email, password } = req.body
 			email = email.toUpperCase()
 
@@ -113,12 +114,15 @@ export default class UsersController {
 				expiresIn: '24h',
 			})
 
-			const userWithoutPassword = await UsersModel.findUserByUsername(
-				user.username
-			)
 			res
-				.cookie('authToken', jwt, { maxAge: 1000 * 60 * 60 * 24 })
-				.json(userWithoutPassword)
+				.cookie('authToken', jwt, {
+					maxAge: 1000 * 60 * 60 * 24,
+					httpOnly: true,
+				})
+				.cookie('user', user.username, {
+					maxAge: 1000 * 60 * 60 * 24,
+				})
+				.json({ message: `logged in as ${user.username}` })
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500).send(error.message)
 			else res.status(400).json({ message: 'Invalid email and/or password.' })
@@ -136,6 +140,7 @@ export default class UsersController {
 		try {
 			res
 				.clearCookie('authToken')
+				.clearCookie('user')
 				.json({ message: 'Logged out user successfully' })
 		} catch (error) {
 			res.status(400).json({ message: 'Unable to logout.' })

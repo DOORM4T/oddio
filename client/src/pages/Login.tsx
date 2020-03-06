@@ -1,5 +1,4 @@
 import React from 'react'
-import Spacing from '../components/Spacing'
 import Header from '../components/Header'
 import LoginForm from '../containers/LoginForm'
 import { Link } from 'react-router-dom'

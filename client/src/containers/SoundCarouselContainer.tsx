@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Carousel from '../components/Carousel'
-import Sound from '../util/sound'
+import { Sound } from '../util/types/Sound.type'
 import playSound from '../util/playSound'
+import { GlobalContext } from '../context/globalContext'
 
 interface SoundCatalogContainerProps {
 	query?: string
@@ -10,9 +11,12 @@ interface SoundCatalogContainerProps {
 export default function SoundCatalogContainer({
 	query = '',
 }: SoundCatalogContainerProps) {
+	const { globalState } = useContext(GlobalContext)
 	const [sounds, setSounds] = useState<Sound[]>([])
 
 	useEffect(() => {
+		if (!globalState?.user.username) return
+
 		async function getSounds(): Promise<Sound[]> {
 			try {
 				const response = await fetch(`/api/sounds/${query}`)
@@ -29,7 +33,7 @@ export default function SoundCatalogContainer({
 	}, [])
 
 	function items() {
-		return sounds.map((sound, index) => (
+		return sounds.map((sound) => (
 			<>
 				<p>{sound.name}</p>
 				<p>{sound.author}</p>

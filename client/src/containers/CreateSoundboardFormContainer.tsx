@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Form, { Field } from '../components/Form'
-import useUserInfoFromCookie from '../util/useUserInfoFromCookie'
+import { GlobalContext } from '../context/globalContext'
 
 const fields: Field[] = [
 	{
@@ -12,8 +12,8 @@ const fields: Field[] = [
 ]
 
 export default function CreateSoundboardFormContainer() {
-	const [userInfo] = useUserInfoFromCookie()
-	const { username } = userInfo
+	const { globalState } = useContext(GlobalContext)
+	const username = globalState?.user.username
 
 	return (
 		<Form

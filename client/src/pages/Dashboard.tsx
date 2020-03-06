@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Header from '../components/Header'
 import AddSoundForm from '../containers/AddSoundForm'
 import SoundCarouselContainer from '../containers/SoundCarouselContainer'
 import CreateSoundboardFormContainer from '../containers/CreateSoundboardFormContainer'
 import SoundBoards from '../containers/SoundboardsCarouselContainer/index'
 import Spacing from '../components/Spacing'
+import { GlobalContext } from '../context/globalContext'
 import useUserInfoFromCookie from '../util/useUserInfoFromCookie'
 
 export default function Dashboard() {
-	const [userInfo] = useUserInfoFromCookie(true)
+	useUserInfoFromCookie(true)
 
-	if (!userInfo) return null
+	const { globalState } = useContext(GlobalContext)
+	if (!globalState?.user) return null
 
 	return (
 		<article>
@@ -25,7 +27,9 @@ export default function Dashboard() {
 			<Spacing spaces={2} />
 			<section>
 				<h1>My Sounds</h1>
-				<SoundCarouselContainer query={`?author=${userInfo.username}`} />
+				<SoundCarouselContainer
+					query={`?author=${globalState.user.username}`}
+				/>
 			</section>
 			<Spacing spaces={2} />
 			<section>

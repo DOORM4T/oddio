@@ -1,16 +1,12 @@
-import React, { useState } from 'react'
-import useUserInfoFromCookie, {
-	Soundboard,
-} from '../../util/useUserInfoFromCookie'
+import React, { useState, useContext } from 'react'
+import { GlobalContext } from '../../context/globalContext'
 
 interface AddToSoundboardProps {
 	soundId: string
 }
 
 export default function AddToSoundboard({ soundId }: AddToSoundboardProps) {
-	const [userInfo] = useUserInfoFromCookie()
-	const { username } = userInfo
-
+	const { globalState } = useContext(GlobalContext)
 	const [selectedSoundboardId, setSelectedSoundboardId] = useState<string>('')
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -23,7 +19,7 @@ export default function AddToSoundboard({ soundId }: AddToSoundboardProps) {
 
 		const body = JSON.stringify({ soundId })
 		const response = await fetch(
-			`/api/users/${username}/soundboards/${selectedSoundboardId}/addsound`,
+			`/api/users/${globalState?.user.username}/soundboards/${selectedSoundboardId}/addsound`,
 			{
 				method: 'PUT',
 				body,
@@ -46,9 +42,9 @@ export default function AddToSoundboard({ soundId }: AddToSoundboardProps) {
 				<option disabled value="">
 					- Choose a Soundboard -
 				</option>
-				{userInfo &&
-					userInfo.soundboards &&
-					userInfo.soundboards.map(({ _id, name }) => (
+				{globalState?.user &&
+					globalState?.user.soundboards &&
+					globalState?.user.soundboards.map(({ _id, name }) => (
 						<option value={_id} key={_id}>
 							{name}
 						</option>

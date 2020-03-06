@@ -1,19 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { decode } from 'jsonwebtoken'
-import Sound from '../util/sound'
+import { GlobalContext } from '../context/globalContext'
+import { loginUserAction } from '../context/globalActions'
 
 export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
-	const [userData, setUserData] = useState<User>({
-		_id: '',
-		email: '',
-		joined: '',
-		private: true,
-		sounds: [],
-		soundboards: [],
-		soundsFamed: [],
-		username: '',
-	})
+	const { dispatch } = useContext(GlobalContext)
 	const history = useHistory()
 
 	useEffect(() => {
@@ -22,12 +13,9 @@ export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 			return
 		}
 
-		const decodedUserToken: any = decode(
-			document.cookie.slice('authToken='.length)
-		)
+		console.log('updating')
 
-		const { username } = decodedUserToken
-
+		const username = document.cookie.slice('user='.length)
 		const getUserData = async () => {
 			const response = await fetch(`/api/users/${username}`)
 			const data = await response.json()
@@ -36,27 +24,8 @@ export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 				history.push('/login')
 				return
 			}
-			setUserData(() => data)
+			if (dispatch) dispatch(loginUserAction(data))
 		}
 		getUserData()
 	}, [])
-
-	return [userData]
-}
-
-export type User = {
-	_id: string
-	username: string
-	soundsFamed: Sound[]
-	soundboards: Soundboard[]
-	sounds: Sound[]
-	private: boolean
-	email: string
-	joined: string
-}
-
-export interface Soundboard {
-	_id: string
-	name: string
-	sounds: Sound[]
 }

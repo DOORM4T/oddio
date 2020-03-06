@@ -1,13 +1,13 @@
-import React from 'react'
-import Sound from '../../util/sound'
+import React, { useContext } from 'react'
+import { Sound } from '../../util/types/Sound.type'
 import playSound from '../../util/playSound'
 import styles from './Catalog.module.scss'
 import FameButton from '../FameButton/FameButton'
 import AddToSoundboard from '../AddToSoundboard'
-import useUserInfoFromCookie from '../../util/useUserInfoFromCookie'
+import { GlobalContext } from '../../context/globalContext'
 
 export default function Catalog({ sounds }: CatalogProps) {
-	const [userInfo] = useUserInfoFromCookie()
+	const { globalState } = useContext(GlobalContext)
 
 	return (
 		<section className={styles.catalog}>
@@ -23,7 +23,7 @@ export default function Catalog({ sounds }: CatalogProps) {
 							{sound.triggers.join(', ')}
 						</p>
 						<p>{new Date(sound.created).toLocaleDateString()}</p>
-						{userInfo.username && (
+						{globalState?.user.username && (
 							<>
 								<AddToSoundboard soundId={sound._id} />
 								<FameButton soundId={sound._id} fame={sound.fame} />

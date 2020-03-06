@@ -28,7 +28,9 @@ export default class SoundsModel {
 			return queryValidation.test(value)
 		})
 		const fields: any = {}
-		validQueries.forEach((value: any) => (fields[value] = query[value]))
+		validQueries.forEach(
+			(value: any) => (fields[value] = new RegExp(query[value], 'i'))
+		)
 
 		// Used on the start, count, sort, sortBy
 		let { start = 0, count = 10, order = -1, sort = 'fame' } = query
@@ -40,7 +42,7 @@ export default class SoundsModel {
 		else if (order === 'asc') order = 1
 
 		const cursor: Cursor = await soundsCollection
-			.find()
+			.find(fields)
 			.skip(start)
 			.limit(count)
 			.sort({ [sort]: order })

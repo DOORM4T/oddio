@@ -6,8 +6,11 @@ import SearchBar from '../components/SearchBar'
 import SoundCarouselContainer from '../containers/SoundCarouselContainer'
 import Button from '../components/Button'
 import Footer from '../components/Footer'
+import useUserInfoFromCookie from '../util/useUserInfoFromCookie'
 
 export default function Home() {
+	useUserInfoFromCookie()
+
 	return (
 		<article>
 			<Header title="SoundBird" icon="🐦" />

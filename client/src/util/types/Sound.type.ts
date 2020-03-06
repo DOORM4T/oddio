@@ -1,4 +1,4 @@
-export default interface Sound {
+export type Sound = {
 	_id: string
 	author: string
 	category: string

@@ -1,22 +1,17 @@
 import React from 'react'
-import Spacing from '../components/Spacing'
 import Header from '../components/Header'
 import SearchBar from '../components/SearchBar'
-import SoundCarouselContainer from '../containers/SoundCarouselContainer'
 import SoundCatalogContainer from '../containers/SoundCatalogContainer'
+import useUserInfoFromCookie from '../util/useUserInfoFromCookie'
 
 export default function SoundsCatalog() {
+	useUserInfoFromCookie()
+
 	return (
 		<article>
 			<Header title="Catalog" icon="📇" />
 			<main data-aos="fade">
 				<div>
-					<Spacing spaces={2} />
-					<h1 style={{ marginLeft: '5rem' }}>Featured</h1>
-					<SoundCarouselContainer />
-					<Spacing spaces={15} />
-					<hr />
-					<Spacing spaces={5} />
 					<div
 						style={{
 							position: 'sticky',
