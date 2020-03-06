@@ -13,7 +13,12 @@ export default function Catalog({ sounds }: CatalogProps) {
 		<section className={styles.catalog}>
 			{sounds.length &&
 				sounds.map((sound) => (
-					<div className={styles.item} key={sound._id}>
+					<div
+						className={styles.item}
+						key={sound._id}
+						data-aos="zoom-in"
+						data-aos-duration={500}
+					>
 						<h2>{sound.name}</h2>
 						<h4>{sound.author}</h4>
 						<p>{sound.description}</p>

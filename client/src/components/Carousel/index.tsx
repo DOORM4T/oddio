@@ -48,7 +48,7 @@ export default function Catalog({ items }: CatalogProps) {
 					<div
 						className={`${styles.item} swiper-slide`}
 						key={`Item-${index}`}
-						data-aos="zoom-in"
+						data-aos="flip-down"
 					>
 						{item}
 					</div>

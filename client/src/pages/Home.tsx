@@ -14,7 +14,7 @@ export default function Home() {
 	return (
 		<article>
 			<Header title="SoundBird" icon="🐦" />
-			<main data-aos="fade">
+			<main>
 				<Spacing spaces={2} />
 				<SearchBar />
 				<Spacing spaces={1} />

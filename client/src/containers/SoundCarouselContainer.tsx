@@ -15,7 +15,7 @@ export default function SoundCatalogContainer({
 	const [sounds, setSounds] = useState<Sound[]>([])
 
 	useEffect(() => {
-		if (!globalState?.user.username) return
+		if (query && !globalState?.user.username) return
 
 		async function getSounds(): Promise<Sound[]> {
 			try {

@@ -10,7 +10,7 @@ export default function SoundsCatalog() {
 	return (
 		<article>
 			<Header title="Catalog" icon="📇" />
-			<main data-aos="fade">
+			<main>
 				<div>
 					<div
 						style={{
@@ -20,6 +20,7 @@ export default function SoundsCatalog() {
 							padding: '1rem',
 							boxShadow: '0 24px 16px rgba(0,0,0,0.5)',
 							borderRadius: '0 0 4px 4px',
+							zIndex: 99,
 						}}
 						id="TheWholeLot"
 					>
