@@ -1,5 +1,6 @@
 import { GlobalStateAction } from './globalActions'
 import { User } from '../util/types/User.type'
+import { Sound } from '../util/types/Sound.type'
 
 export const initialGlobalState = {
 	user: {
@@ -17,6 +18,7 @@ export const initialGlobalState = {
 		alert: 'nothing',
 	},
 	soundsQuery: '',
+	soundsToLivePlay: [],
 }
 
 export const globalStateReducer = (
@@ -46,6 +48,8 @@ export const globalStateReducer = (
 			return { ...state, ui: { ...state.ui, theme: payload } }
 		case 'SET_SOUNDS_QUERY':
 			return { ...state, soundsQuery: payload }
+		case 'SET_SOUNDS_TO_LIVE_PLAY':
+			return { ...state, soundsToLivePlay: payload }
 		default:
 			throw new Error()
 	}
@@ -58,4 +62,5 @@ export type GlobalState = {
 		alert: string
 	}
 	soundsQuery: string
+	soundsToLivePlay: Sound[]
 }

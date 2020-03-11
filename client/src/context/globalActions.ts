@@ -1,4 +1,5 @@
 import { User } from '../util/types/User.type'
+import { Sound } from '../util/types/Sound.type'
 
 export type GlobalStateAction = {
 	type: string
@@ -26,9 +27,16 @@ export function setAlertAction(alert: string) {
 	}
 }
 
-export function setSoundsSearchQuery(queryString: string) {
+export function setSoundsSearchQueryAction(queryString: string) {
 	return {
 		type: 'SET_SOUNDS_QUERY',
 		payload: queryString,
+	}
+}
+
+export function setSoundsToLivePlayAction(sounds: Sound[]) {
+	return {
+		type: 'SET_SOUNDS_TO_LIVE_PLAY',
+		payload: sounds,
 	}
 }

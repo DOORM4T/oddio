@@ -8,6 +8,7 @@ import { User } from '../../util/types/User.type'
 import { Sound } from '../../util/types/Sound.type'
 import { GlobalContext } from '../../context/globalContext'
 import useRefreshUserData from '../../util/useRefreshUserData'
+import { setSoundsToLivePlayAction } from '../../context/globalActions'
 
 interface SoundBoardProps {
 	reactToTriggers: boolean
@@ -15,7 +16,7 @@ interface SoundBoardProps {
 
 export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 	const refreshUserData = useRefreshUserData()
-	const { globalState } = useContext(GlobalContext)
+	const { globalState, dispatch } = useContext(GlobalContext)
 	const soundboards = globalState?.user.soundboards
 
 	const [soundboardSoundData, setSoundboardSoundData] = useState<
@@ -63,6 +64,21 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 		}
 	}
 
+	const livePlay = (soundboardSoundIds: string[]) => {
+		return () => {
+			const soundPromises = soundboardSoundIds.map((soundId) =>
+				fetch(`/api/sounds/${soundId}`)
+			)
+			Promise.all(soundPromises)
+				.then((responses) =>
+					Promise.all(responses.map((response) => response.json()))
+				)
+				.then((data) => {
+					if (dispatch) dispatch(setSoundsToLivePlayAction(data))
+				})
+		}
+	}
+
 	return (
 		<section>
 			<button onClick={() => setInDeleteMode((prevState) => !prevState)}>
@@ -83,6 +99,11 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 							>
 								<span role="img" aria-label="Delete Soundboard">
 									❌
+								</span>
+							</button>
+							<button onClick={livePlay(soundBoard.sounds)}>
+								<span role="img" aria-label="Live play">
+									👂
 								</span>
 							</button>
 							<button

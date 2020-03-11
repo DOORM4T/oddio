@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import styles from './SearchBar.module.scss'
 import { GlobalContext } from '../../context/globalContext'
-import { setSoundsSearchQuery } from '../../context/globalActions'
+import { setSoundsSearchQueryAction } from '../../context/globalActions'
 import { useHistory } from 'react-router-dom'
 
 export default function SearchBar() {
@@ -10,7 +10,7 @@ export default function SearchBar() {
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (!dispatch) return
-		dispatch(setSoundsSearchQuery(event.target.value))
+		dispatch(setSoundsSearchQueryAction(event.target.value))
 	}
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
