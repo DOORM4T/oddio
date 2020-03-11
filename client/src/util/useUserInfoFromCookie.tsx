@@ -1,7 +1,8 @@
 import { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GlobalContext } from '../context/globalContext'
-import { loginUserAction, logoutUserAction } from '../context/globalActions'
+import { setUserAction, logoutUserAction } from '../context/globalActions'
+import useRefreshUserData from './useRefreshUserData'
 
 export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 	const { dispatch } = useContext(GlobalContext)
@@ -23,7 +24,7 @@ export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 			if (response.status !== 200 || !data) {
 				logout()
 			}
-			dispatch(loginUserAction(data))
+			dispatch(setUserAction(data))
 		}
 		getUserData()
 

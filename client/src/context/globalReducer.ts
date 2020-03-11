@@ -25,7 +25,7 @@ export const globalStateReducer = (
 ) => {
 	const { type, payload } = action
 	switch (type) {
-		case 'LOGIN_USER':
+		case 'SET_USER':
 			return { ...state, user: payload }
 		case 'LOGOUT_USER':
 			return {

@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom'
 import styles from './Form.module.scss'
 import Button from '../Button'
 import Spacing from '../Spacing'
+import useRefreshUserData from '../../util/useRefreshUserData'
 
 export default function Form({
 	action,
@@ -27,6 +28,7 @@ export default function Form({
 	const history = useHistory()
 	const formRef = useRef<any>(null)
 	const fileRef = useRef<any>(null)
+	const refreshUserData = useRefreshUserData()
 
 	const handleChange = (
 		event: ChangeEvent<
@@ -72,11 +74,9 @@ export default function Form({
 			if (response.status === 200) {
 				formRef.current.reset()
 				if (redirect) history.push(redirect)
-				else window.location.reload()
+				else refreshUserData()
 			} else {
-				if (response.status === 403) {
-					window.location.reload()
-				}
+				window.location.reload()
 			}
 		} catch (error) {
 			console.error(error.message)

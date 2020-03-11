@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import playSound from '../../util/playSound'
 import Carousel from '../../components/Carousel'
 import styles from './Soundboards.module.scss'
@@ -7,12 +7,14 @@ import { Soundboard } from '../../util/types/Soundboard.type'
 import { User } from '../../util/types/User.type'
 import { Sound } from '../../util/types/Sound.type'
 import { GlobalContext } from '../../context/globalContext'
+import useRefreshUserData from '../../util/useRefreshUserData'
 
 interface SoundBoardProps {
 	reactToTriggers: boolean
 }
 
 export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
+	const refreshUserData = useRefreshUserData()
 	const { globalState } = useContext(GlobalContext)
 	const soundboards = globalState?.user.soundboards
 
@@ -57,7 +59,7 @@ export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
 				headers: { 'Content-Type': 'application/json' },
 			})
 
-			if (response.status === 200) window.location.reload()
+			if (response.status === 200) refreshUserData()
 		}
 	}
 
@@ -119,6 +121,7 @@ function SoundsList(
 	soundBoard: Soundboard,
 	userInfo: User | undefined
 ) {
+	const refreshUserData = useRefreshUserData()
 	const soundboard = soundboardSoundData.find(
 		(soundboardSounds) => soundboardSounds.soundboardName === soundBoard.name
 	)
@@ -137,7 +140,7 @@ function SoundsList(
 					headers: { 'Content-Type': 'application/json' },
 				}
 			)
-			if (response.status === 200) window.location.reload()
+			if (response.status === 200) refreshUserData()
 		}
 	}
 

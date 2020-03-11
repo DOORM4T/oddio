@@ -5,9 +5,9 @@ export type GlobalStateAction = {
 	payload: any
 }
 
-export function loginUserAction(userData: User): GlobalStateAction {
+export function setUserAction(userData: User): GlobalStateAction {
 	return {
-		type: 'LOGIN_USER',
+		type: 'SET_USER',
 		payload: userData,
 	}
 }

@@ -1,13 +1,17 @@
 import React, { useState, useContext } from 'react'
 import { GlobalContext } from '../../context/globalContext'
+import { setUserAction } from '../../context/globalActions'
+import { User } from '../../util/types/User.type'
+import useRefreshUserData from '../../util/useRefreshUserData'
 
 interface AddToSoundboardProps {
 	soundId: string
 }
 
 export default function AddToSoundboard({ soundId }: AddToSoundboardProps) {
-	const { globalState } = useContext(GlobalContext)
+	const { globalState, dispatch } = useContext(GlobalContext)
 	const [selectedSoundboardId, setSelectedSoundboardId] = useState<string>('')
+	const refreshUserData = useRefreshUserData()
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedSoundboardId(event.target.value)
@@ -28,6 +32,8 @@ export default function AddToSoundboard({ soundId }: AddToSoundboardProps) {
 				},
 			}
 		)
+
+		if (response.status === 200) refreshUserData()
 	}
 
 	return (
