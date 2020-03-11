@@ -16,6 +16,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import SoundsCatalog from './pages/SoundsCatalog'
+import SoundPlayer from './components/SoundPlayer'
 
 export default function App() {
 	const [globalState, dispatch] = useReducer<
@@ -33,6 +34,7 @@ export default function App() {
 
 	return (
 		<GlobalContext.Provider value={{ globalState, dispatch }}>
+			<SoundPlayer />
 			<Router>
 				<Switch>
 					<Route exact path="/" render={() => <Home />} />
