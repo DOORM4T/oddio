@@ -18,7 +18,11 @@ export default function validationMiddleware(
 		res.locals.username = decoded.username
 		next()
 	} catch (error) {
-		res.status(403).send('You cannot pass.')
+		res
+			.status(403)
+			.clearCookie('authToken')
+			.clearCookie('user')
+			.send('You cannot pass.')
 		next(error)
 	}
 }

@@ -68,12 +68,15 @@ export default function Form({
 
 			const responseData = await response.json()
 			console.log(responseData)
+
 			if (response.status === 200) {
 				formRef.current.reset()
 				if (redirect) history.push(redirect)
 				else window.location.reload()
 			} else {
-				if (responseData.message) throw new Error(responseData.message)
+				if (response.status === 403) {
+					window.location.reload()
+				}
 			}
 		} catch (error) {
 			console.error(error.message)

@@ -33,12 +33,10 @@ export default function SoundCatalogContainer({
 						})
 				}
 
-				if (query) {
-					const response = await fetch(`/api/sounds?${query}`)
-					const data: Sound[] | null = await response.json()
-					if (data === null) throw new Error('Failed to fetch sounds.')
-					setSounds(() => data)
-				}
+				const response = await fetch(`/api/sounds?${query}`)
+				const data: Sound[] | null = await response.json()
+				if (data === null) throw new Error('Failed to fetch sounds.')
+				setSounds(() => data)
 			} catch (error) {
 				console.error(error.message)
 				return []
