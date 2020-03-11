@@ -27,14 +27,18 @@ export default function Dashboard() {
 			<Spacing spaces={2} />
 			<section>
 				<h1>My Sounds</h1>
-				<SoundCarouselContainer
-					query={`?author=${globalState.user.username}`}
-				/>
+				{globalState.user.username && (
+					<SoundCarouselContainer
+						query={`author=${globalState.user.username}`}
+					/>
+				)}
 			</section>
 			<Spacing spaces={2} />
 			<section>
 				<h1>Favorites</h1>
-				<SoundCarouselContainer />
+				{globalState.user.soundsFamed.length > 0 && (
+					<SoundCarouselContainer list={globalState.user.soundsFamed} />
+				)}
 			</section>
 			<Spacing spaces={5} />
 			<hr />
