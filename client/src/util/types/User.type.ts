@@ -4,7 +4,7 @@ import { Soundboard } from './Soundboard.type'
 export type User = {
 	_id: string
 	username: string
-	soundsFamed: Sound[]
+	soundsFamed: string[]
 	soundboards: Soundboard[]
 	sounds: Sound[]
 	private: boolean

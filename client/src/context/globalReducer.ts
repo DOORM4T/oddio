@@ -1,6 +1,5 @@
 import { GlobalStateAction } from './globalActions'
-import { Sound } from '../util/types/Sound.type'
-import { Soundboard } from '../util/types/Soundboard.type'
+import { User } from '../util/types/User.type'
 
 export const initialGlobalState = {
 	user: {
@@ -53,16 +52,7 @@ export const globalStateReducer = (
 }
 
 export type GlobalState = {
-	user: {
-		_id: string
-		email: string
-		joined: string
-		private: boolean
-		sounds: Sound[]
-		soundboards: Soundboard[]
-		soundsFamed: Sound[]
-		username: string
-	}
+	user: User
 	ui: {
 		theme: string
 		alert: string
