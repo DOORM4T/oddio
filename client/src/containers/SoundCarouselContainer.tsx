@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Carousel from '../components/Carousel'
 import { Sound } from '../util/types/Sound.type'
 import playSound from '../util/playSound'
+import { GlobalContext } from '../context/globalContext'
+import useRefreshUserData from '../util/useRefreshUserData'
 
 interface SoundCatalogContainerProps {
 	query?: string
@@ -12,6 +14,8 @@ export default function SoundCatalogContainer({
 	query = '',
 	list = [],
 }: SoundCatalogContainerProps) {
+	const refreshUserData = useRefreshUserData()
+	const { globalState } = useContext(GlobalContext)
 	const [sounds, setSounds] = useState<Sound[]>([])
 
 	useEffect(() => {
@@ -44,14 +48,36 @@ export default function SoundCatalogContainer({
 		}
 
 		getSounds()
-	}, [])
+	}, [globalState?.user.sounds])
+
+	function deleteSound(soundId: string) {
+		return async () => {
+			const response = await fetch(`/api/sounds/${soundId}`, {
+				method: 'DELETE',
+			})
+			if (response.status === 200) {
+				refreshUserData()
+			}
+		}
+	}
 
 	function items() {
 		return sounds.map((sound) => (
 			<>
 				<p>{sound.name}</p>
 				<p>{sound.author}</p>
-				<button onClick={() => playSound(sound.sourceId)}>🔊</button>
+				<button onClick={() => playSound(sound.sourceId)}>
+					<span role="img" aria-label="play sound">
+						🔊
+					</span>
+				</button>
+				{globalState?.user.username === sound.author && (
+					<button onClick={deleteSound(sound._id)}>
+						<span role="img" aria-label="delete sound">
+							❌
+						</span>
+					</button>
+				)}
 			</>
 		))
 	}
