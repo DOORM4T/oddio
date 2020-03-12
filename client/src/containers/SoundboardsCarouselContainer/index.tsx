@@ -60,6 +60,7 @@ export default function SoundBoards() {
 		}
 	}
 
+	// Store sound data from soundboard in globalState for live playing
 	const livePlay = (soundboardSoundIds: string[]) => {
 		return () => {
 			const soundPromises = soundboardSoundIds.map((soundId) =>
