@@ -19,7 +19,7 @@ export default function Dashboard() {
 			<Header title="Dashboard" icon="👤" />
 			<section>
 				<h1>My Soundboards</h1>
-				<SoundBoards reactToTriggers={false} />
+				<SoundBoards />
 				<CreateSoundboardFormContainer />
 			</section>
 			<Spacing spaces={5} />

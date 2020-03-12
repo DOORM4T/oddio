@@ -10,11 +10,7 @@ import { GlobalContext } from '../../context/globalContext'
 import useRefreshUserData from '../../util/useRefreshUserData'
 import { setSoundsToLivePlayAction } from '../../context/globalActions'
 
-interface SoundBoardProps {
-	reactToTriggers: boolean
-}
-
-export default function SoundBoards({ reactToTriggers }: SoundBoardProps) {
+export default function SoundBoards() {
 	const refreshUserData = useRefreshUserData()
 	const { globalState, dispatch } = useContext(GlobalContext)
 	const soundboards = globalState?.user.soundboards
