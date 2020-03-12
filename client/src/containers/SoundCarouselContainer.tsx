@@ -8,11 +8,13 @@ import useRefreshUserData from '../util/useRefreshUserData'
 interface SoundCatalogContainerProps {
 	query?: string
 	list?: string[]
+	showCreatorActions?: boolean
 }
 
 export default function SoundCatalogContainer({
 	query = '',
 	list = [],
+	showCreatorActions = false,
 }: SoundCatalogContainerProps) {
 	const refreshUserData = useRefreshUserData()
 	const { globalState } = useContext(GlobalContext)
@@ -71,7 +73,7 @@ export default function SoundCatalogContainer({
 						🔊
 					</span>
 				</button>
-				{globalState?.user.username === sound.author && (
+				{showCreatorActions && globalState?.user.username === sound.author && (
 					<button onClick={deleteSound(sound._id)}>
 						<span role="img" aria-label="delete sound">
 							❌

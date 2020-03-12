@@ -30,6 +30,7 @@ export default function Dashboard() {
 				{globalState.user.username && (
 					<SoundCarouselContainer
 						query={`author=${globalState.user.username}`}
+						showCreatorActions={true}
 					/>
 				)}
 			</section>
