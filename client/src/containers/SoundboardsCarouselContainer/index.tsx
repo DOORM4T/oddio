@@ -48,9 +48,14 @@ export default function SoundBoards() {
 		setIsLoading(false)
 	}, [soundboards])
 
-	const deleteSoundboard = (soundboardId: string) => {
+	const deleteSoundboard = ({ name, _id }: Soundboard) => {
 		return async () => {
-			const route = `/api/users/${globalState?.user.username}/soundboards/${soundboardId}/deletesoundboard`
+			const confirmed = window.confirm(
+				`Delete soundboard: ${name.toUpperCase()}?`
+			)
+			if (!confirmed) return
+
+			const route = `/api/users/${globalState?.user.username}/soundboards/${_id}/deletesoundboard`
 			const response = await fetch(route, {
 				method: 'DELETE',
 				headers: { 'Content-Type': 'application/json' },
@@ -90,7 +95,7 @@ export default function SoundBoards() {
 							data-aos="fade-right"
 						>
 							<button
-								onClick={deleteSoundboard(soundBoard._id)}
+								onClick={deleteSoundboard(soundBoard)}
 								className={styles.deletebutton}
 								style={{ display: inDeleteMode ? 'inline' : 'none' }}
 							>
@@ -177,17 +182,25 @@ function SoundsList(
 							{sound.triggers.length > 0 ? (
 								<p>{sound.triggers.join(', ')}</p>
 							) : null}
+						</div>
+						<div
+							style={{
+								display: 'flex',
+								width: '100%',
+								justifyContent: 'center',
+							}}
+						>
 							<button onClick={() => playSound(sound.sourceId)}>
 								<span role="img" aria-label="Play sound">
 									🔊
 								</span>
 							</button>
+							<button onClick={deleteFromSoundboard(sound._id)}>
+								<span role="img" aria-label="Remove from soundboard">
+									❌
+								</span>
+							</button>
 						</div>
-						<button onClick={deleteFromSoundboard(sound._id)}>
-							<span role="img" aria-label="Remove from soundboard">
-								❌
-							</span>
-						</button>
 					</div>
 				</li>
 			))}

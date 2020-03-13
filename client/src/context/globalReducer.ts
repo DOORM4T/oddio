@@ -19,6 +19,7 @@ export const initialGlobalState = {
 	},
 	soundsQuery: '',
 	soundsToLivePlay: [],
+	showModal: false,
 }
 
 export const globalStateReducer = (
@@ -50,6 +51,8 @@ export const globalStateReducer = (
 			return { ...state, soundsQuery: payload }
 		case 'SET_SOUNDS_TO_LIVE_PLAY':
 			return { ...state, soundsToLivePlay: payload }
+		case 'SET_MODAL_VISIBILITY':
+			return { ...state, showModal: payload }
 		default:
 			throw new Error()
 	}
@@ -63,4 +66,5 @@ export type GlobalState = {
 	}
 	soundsQuery: string
 	soundsToLivePlay: Sound[]
+	showModal: boolean
 }

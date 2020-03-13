@@ -40,3 +40,7 @@ export function setSoundsToLivePlayAction(sounds: Sound[]) {
 		payload: sounds,
 	}
 }
+
+export function setModalVisibilityAction(show: boolean) {
+	return { type: 'SET_MODAL_VISBILITY', payload: show }
+}

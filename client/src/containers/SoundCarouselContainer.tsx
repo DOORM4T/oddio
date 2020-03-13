@@ -4,6 +4,8 @@ import { Sound } from '../util/types/Sound.type'
 import playSound from '../util/playSound'
 import { GlobalContext } from '../context/globalContext'
 import useRefreshUserData from '../util/useRefreshUserData'
+import Modal from '../components/Modal'
+import { setModalVisibilityAction } from '../context/globalActions'
 
 interface SoundCatalogContainerProps {
 	query?: string
@@ -17,10 +19,11 @@ export default function SoundCatalogContainer({
 	showCreatorActions = false,
 }: SoundCatalogContainerProps) {
 	const refreshUserData = useRefreshUserData()
-	const { globalState } = useContext(GlobalContext)
+	const { globalState, dispatch } = useContext(GlobalContext)
 	const [sounds, setSounds] = useState<Sound[]>([])
 
 	useEffect(() => {
+		if (!dispatch) return
 		if (list.length > 0 && query) return
 
 		async function getSounds() {
@@ -52,9 +55,28 @@ export default function SoundCatalogContainer({
 		getSounds()
 	}, [globalState?.user.sounds])
 
-	function deleteSound(soundId: string) {
+	function editSound(sound: Sound) {
 		return async () => {
-			const response = await fetch(`/api/sounds/${soundId}`, {
+			console.log(`editing ${sound.name}`)
+
+			if (!dispatch) return
+			dispatch(setModalVisibilityAction(true))
+
+			// const response = await fetch(`/api/sounds/${soundId}/editsound`, {
+			// 	method: 'PUT',
+			// })
+			// if (response.status === 200) {
+			// 	refreshUserData()
+			// }
+		}
+	}
+
+	function deleteSound({ name, _id }: Sound) {
+		return async () => {
+			const confirmed = window.confirm(`Delete sound: ${name.toUpperCase()}?`)
+			if (!confirmed) return
+
+			const response = await fetch(`/api/sounds/${_id}`, {
 				method: 'DELETE',
 			})
 			if (response.status === 200) {
@@ -68,21 +90,40 @@ export default function SoundCatalogContainer({
 			<>
 				<p>{sound.name}</p>
 				<p>{sound.author}</p>
-				<button onClick={() => playSound(sound.sourceId)}>
-					<span role="img" aria-label="play sound">
-						🔊
-					</span>
-				</button>
-				{showCreatorActions && globalState?.user.username === sound.author && (
-					<button onClick={deleteSound(sound._id)}>
-						<span role="img" aria-label="delete sound">
-							❌
+				<div
+					style={{
+						width: '50%',
+						display: 'flex',
+						justifyContent: 'space-evenly',
+					}}
+				>
+					<button onClick={() => playSound(sound.sourceId)}>
+						<span role="img" aria-label="play sound">
+							🔊
 						</span>
 					</button>
-				)}
+					{showCreatorActions && globalState?.user.username === sound.author && (
+						<>
+							<button onClick={editSound(sound)}>
+								<span role="img" aria-label="delete sound">
+									✏
+								</span>
+							</button>
+							<button onClick={deleteSound(sound)}>
+								<span role="img" aria-label="delete sound">
+									❌
+								</span>
+							</button>
+						</>
+					)}
+				</div>
 			</>
 		))
 	}
 
-	return <Carousel items={items()} />
+	return (
+		<>
+			<Carousel items={items()} />
+		</>
+	)
 }
