@@ -55,21 +55,21 @@ export default function SoundCatalogContainer({
 		getSounds()
 	}, [globalState?.user.sounds])
 
-	function editSound(sound: Sound) {
-		return async () => {
-			console.log(`editing ${sound.name}`)
+	// function editSound(sound: Sound) {
+	// 	return async () => {
+	// 		console.log(`editing ${sound.name}`)
 
-			if (!dispatch) return
-			dispatch(setModalVisibilityAction(true))
+	// 		if (!dispatch) return
+	// 		dispatch(setModalVisibilityAction(true))
 
-			// const response = await fetch(`/api/sounds/${soundId}/editsound`, {
-			// 	method: 'PUT',
-			// })
-			// if (response.status === 200) {
-			// 	refreshUserData()
-			// }
-		}
-	}
+	// 		// const response = await fetch(`/api/sounds/${soundId}/editsound`, {
+	// 		// 	method: 'PUT',
+	// 		// })
+	// 		// if (response.status === 200) {
+	// 		// 	refreshUserData()
+	// 		// }
+	// 	}
+	// }
 
 	function deleteSound({ name, _id }: Sound) {
 		return async () => {
@@ -90,13 +90,7 @@ export default function SoundCatalogContainer({
 			<>
 				<p>{sound.name}</p>
 				<p>{sound.author}</p>
-				<div
-					style={{
-						width: '50%',
-						display: 'flex',
-						justifyContent: 'space-evenly',
-					}}
-				>
+				<div>
 					<button onClick={() => playSound(sound.sourceId)}>
 						<span role="img" aria-label="play sound">
 							🔊
@@ -104,11 +98,11 @@ export default function SoundCatalogContainer({
 					</button>
 					{showCreatorActions && globalState?.user.username === sound.author && (
 						<>
-							<button onClick={editSound(sound)}>
+							{/* <button onClick={editSound(sound)}>
 								<span role="img" aria-label="delete sound">
 									✏
 								</span>
-							</button>
+							</button> */}
 							<button onClick={deleteSound(sound)}>
 								<span role="img" aria-label="delete sound">
 									❌

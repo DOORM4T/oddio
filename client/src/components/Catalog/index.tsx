@@ -10,9 +10,9 @@ export default function Catalog({ sounds }: CatalogProps) {
 	const { globalState } = useContext(GlobalContext)
 
 	return (
-		<>
+		<section className={styles.section}>
 			{sounds.length > 0 ? (
-				<section className={styles.catalog}>
+				<ul className={styles.catalog}>
 					{sounds.map((sound) => (
 						<div
 							className={styles.item}
@@ -38,13 +38,13 @@ export default function Catalog({ sounds }: CatalogProps) {
 							<button onClick={() => playSound(sound.sourceId)}>🔊</button>
 						</div>
 					))}
-				</section>
+				</ul>
 			) : (
 				<h3 className={styles.empty}>
 					Looks like there's nothing here... yet!
 				</h3>
 			)}
-		</>
+		</section>
 	)
 }
 
