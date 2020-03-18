@@ -1,11 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import { GlobalContext } from '../../context/globalContext'
+import styles from './Soundplayer.module.scss'
 
 export default function SoundPlayer() {
 	const { globalState, dispatch } = useContext(GlobalContext)
 	const [triggers, setTriggers] = useState<string[]>([])
 	const [recognition, setRecognition] = useState<SpeechRecognition>()
 	const [listening, setListening] = useState<boolean>(false)
+	const buttonRef = useRef<HTMLButtonElement | null>(null)
 
 	useEffect(() => {
 		setRecognition(() => {
@@ -86,9 +88,20 @@ export default function SoundPlayer() {
 	}, [globalState?.soundsToLivePlay])
 
 	return (
-		<div>
-			SoundPlayer
-			<button onClick={() => setListening(!listening)}>
+		<div className={styles.soundplayer}>
+			<button
+				onClick={() => {
+					setListening((prevState) => {
+						if (!buttonRef.current) return !prevState
+						if (prevState === false)
+							buttonRef.current.style.filter =
+								'hue-rotate(150deg) brightness(180%)'
+						else buttonRef.current.style.filter = 'none'
+						return !prevState
+					})
+				}}
+				ref={buttonRef}
+			>
 				<span role="img" aria-label="live play">
 					🔴
 				</span>

@@ -1,0 +1,23 @@
+@import '../../variables';
+
+.soundplayer {
+	display: flex;
+
+	padding: 0 1rem;
+
+	position: fixed;
+	left: 0;
+	top: 48px;
+	z-index: 9999;
+
+	height: 50px;
+
+	background-color: #111;
+	box-shadow: 0 4px 4px black;
+	border-radius: 0 4px 4px 0;
+
+	button {
+		margin: 0 auto;
+		width: 50px;
+	}
+}
