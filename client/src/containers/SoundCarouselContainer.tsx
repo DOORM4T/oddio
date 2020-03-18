@@ -4,19 +4,21 @@ import { Sound } from '../util/types/Sound.type'
 import playSound from '../util/playSound'
 import { GlobalContext } from '../context/globalContext'
 import useRefreshUserData from '../util/useRefreshUserData'
-import Modal from '../components/Modal'
-import { setModalVisibilityAction } from '../context/globalActions'
+import AddToSoundboard from '../components/AddToSoundboard'
+import FameButton from '../components/FameButton/FameButton'
 
 interface SoundCatalogContainerProps {
 	query?: string
 	list?: string[]
 	showCreatorActions?: boolean
+	showAddToSoundboard?: boolean
 }
 
 export default function SoundCatalogContainer({
 	query = '',
 	list = [],
 	showCreatorActions = false,
+	showAddToSoundboard = false,
 }: SoundCatalogContainerProps) {
 	const refreshUserData = useRefreshUserData()
 	const { globalState, dispatch } = useContext(GlobalContext)
@@ -90,6 +92,7 @@ export default function SoundCatalogContainer({
 			<>
 				<p>{sound.name}</p>
 				<p>{sound.author}</p>
+				{showAddToSoundboard && <AddToSoundboard soundId={sound._id} />}
 				<div>
 					<button onClick={() => playSound(sound.sourceId)}>
 						<span role="img" aria-label="play sound">

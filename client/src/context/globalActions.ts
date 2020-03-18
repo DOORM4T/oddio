@@ -44,3 +44,7 @@ export function setSoundsToLivePlayAction(sounds: Sound[]) {
 export function setModalVisibilityAction(show: boolean) {
 	return { type: 'SET_MODAL_VISBILITY', payload: show }
 }
+
+export function toggleEditingDashboardAction() {
+	return { type: 'TOGGLE_EDITING_DASHBOARD', payload: null }
+}

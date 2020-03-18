@@ -9,6 +9,7 @@ import { Sound } from '../../util/types/Sound.type'
 import { GlobalContext } from '../../context/globalContext'
 import useRefreshUserData from '../../util/useRefreshUserData'
 import { setSoundsToLivePlayAction } from '../../context/globalActions'
+import { globalStateReducer } from '../../context/globalReducer'
 
 export default function SoundBoards() {
 	const refreshUserData = useRefreshUserData()
@@ -19,7 +20,6 @@ export default function SoundBoards() {
 		SoundboardSounds[]
 	>([])
 	const [isLoading, setIsLoading] = useState<boolean>(true)
-	const [inDeleteMode, setInDeleteMode] = useState<boolean>(false)
 
 	useEffect(() => {
 		if (!soundboards || soundboards.length === 0) return
@@ -83,9 +83,6 @@ export default function SoundBoards() {
 
 	return (
 		<section>
-			<button onClick={() => setInDeleteMode((prevState) => !prevState)}>
-				Edit
-			</button>
 			{!isLoading && soundboards ? (
 				soundboards.map((soundBoard) => {
 					return (
@@ -94,15 +91,16 @@ export default function SoundBoards() {
 							key={soundBoard._id}
 							data-aos="fade-right"
 						>
-							<button
-								onClick={deleteSoundboard(soundBoard)}
-								className={styles.deletebutton}
-								style={{ display: inDeleteMode ? 'inline' : 'none' }}
-							>
-								<span role="img" aria-label="Delete Soundboard">
-									❌
-								</span>
-							</button>
+							{globalState?.editingDashboard && (
+								<button
+									onClick={deleteSoundboard(soundBoard)}
+									className={styles.deletebutton}
+								>
+									<span role="img" aria-label="Delete Soundboard">
+										❌
+									</span>
+								</button>
+							)}
 							<button onClick={livePlay(soundBoard.sounds)}>
 								<span role="img" aria-label="Live play">
 									👂
@@ -145,6 +143,8 @@ function SoundsList(
 	userInfo: User | undefined
 ) {
 	const refreshUserData = useRefreshUserData()
+	const { globalState } = useContext(GlobalContext)
+
 	const soundboard = soundboardSoundData.find(
 		(soundboardSounds) => soundboardSounds.soundboardName === soundBoard.name
 	)
@@ -154,6 +154,9 @@ function SoundsList(
 	if (!soundboard || !username) return null
 	const deleteFromSoundboard = (soundId: string) => {
 		return async () => {
+			const confirmed = window.confirm('Delete sound from soundboard?')
+			if (!confirmed) return
+
 			const body = JSON.stringify({ soundId })
 			const response = await fetch(
 				`/api/users/${username}/soundboards/${soundBoard._id}/deletesound`,
@@ -195,11 +198,13 @@ function SoundsList(
 									🔊
 								</span>
 							</button>
-							<button onClick={deleteFromSoundboard(sound._id)}>
-								<span role="img" aria-label="Remove from soundboard">
-									❌
-								</span>
-							</button>
+							{globalState?.editingDashboard && (
+								<button onClick={deleteFromSoundboard(sound._id)}>
+									<span role="img" aria-label="Remove from soundboard">
+										❌
+									</span>
+								</button>
+							)}
 						</div>
 					</div>
 				</li>

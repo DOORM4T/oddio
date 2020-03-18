@@ -20,6 +20,7 @@ export const initialGlobalState = {
 	soundsQuery: '',
 	soundsToLivePlay: [],
 	showModal: false,
+	editingDashboard: false,
 }
 
 export const globalStateReducer = (
@@ -53,6 +54,8 @@ export const globalStateReducer = (
 			return { ...state, soundsToLivePlay: payload }
 		case 'SET_MODAL_VISIBILITY':
 			return { ...state, showModal: payload }
+		case 'TOGGLE_EDITING_DASHBOARD':
+			return { ...state, editingDashboard: !state.editingDashboard }
 		default:
 			throw new Error()
 	}
@@ -67,4 +70,5 @@ export type GlobalState = {
 	soundsQuery: string
 	soundsToLivePlay: Sound[]
 	showModal: boolean
+	editingDashboard: boolean
 }
