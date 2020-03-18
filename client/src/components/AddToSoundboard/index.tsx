@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { GlobalContext } from '../../context/globalContext'
-import { setUserAction } from '../../context/globalActions'
-import { User } from '../../util/types/User.type'
 import useRefreshUserData from '../../util/useRefreshUserData'
+import styles from './AddToSoundboard.module.scss'
 
 interface AddToSoundboardProps {
 	soundId: string
@@ -37,7 +36,7 @@ export default function AddToSoundboard({ soundId }: AddToSoundboardProps) {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit} className={styles.addToSoundboardForm}>
 			<select
 				name="soundboard-select"
 				id="soundboard-select"
