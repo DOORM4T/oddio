@@ -18,7 +18,7 @@ export default function SoundsCatalog() {
 							top: 0,
 							backgroundColor: '#fcfcfc',
 							padding: '1rem',
-							boxShadow: '0 24px 16px rgba(0,0,0,0.5)',
+							boxShadow: '0 16px 8px rgba(0,0,0,0.5)',
 							borderRadius: '0 0 4px 4px',
 							zIndex: 99,
 						}}
