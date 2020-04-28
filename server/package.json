@@ -1,10 +1,10 @@
 {
 	"name": "oddio-concept-yup",
 	"version": "1.0.0",
-	"main": "dist/index.js",
+	"main": "src/dist/index.js",
 	"license": "MIT",
 	"scripts": {
-		"start": "cross-env NODE_ENV=production node dist/index.js",
+		"start": "node src/dist/index.js",
 		"dev": "cross-env NODE_ENV=development nodemon src/index.ts",
 		"build": "tsc -p ./src",
 		"test": "jest",
