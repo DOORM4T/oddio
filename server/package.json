@@ -1,12 +1,12 @@
 {
 	"name": "oddio-concept-yup",
 	"version": "1.0.0",
-	"main": "index.js",
+	"main": "dist/index.js",
 	"license": "MIT",
 	"scripts": {
-		"start": "node dist/index",
-		"dev": "nodemon src/index.ts",
-		"build": "tsc -p .",
+		"start": "cross-env NODE_ENV=production node dist/index.js",
+		"dev": "cross-env NODE_ENV=development nodemon src/index.ts",
+		"build": "tsc -p ./src",
 		"test": "jest",
 		"test:sounds": "jest soundsRoute.test.ts",
 		"test:users": "jest usersRoute.test.ts"
@@ -22,6 +22,7 @@
 		"@types/multer": "^1.3.10",
 		"@types/supertest": "^2.0.8",
 		"@types/yup": "^0.26.27",
+		"cross-env": "^7.0.2",
 		"dotenv": "^8.2.0",
 		"jest": "^25.1.0",
 		"nodemon": "^2.0.2",
