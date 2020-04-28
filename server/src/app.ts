@@ -21,9 +21,9 @@ app.set('views', resolve(__dirname, '../views'))
 app.use('/', routes)
 
 // Serve Client
-app.use('/', express.static(resolve(__dirname, '../build')))
+app.use(express.static(resolve(process.cwd(), '../build')))
 app.use('/*', (req: Request, res: Response, next: NextFunction) => {
-	res.sendFile(resolve(__dirname, '../build/index.html'))
+	res.sendFile(resolve(process.cwd(), '../build/index.html'))
 	// res.status(404).send('Page not found')
 })
 
