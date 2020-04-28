@@ -58,7 +58,7 @@ export default function Form({
 				})
 			} else {
 				// Default form POST
-				console.log(formState)
+				// console.log(formState)
 
 				body = JSON.stringify(formState)
 				response = await fetch(action, {
@@ -71,7 +71,7 @@ export default function Form({
 			}
 
 			const responseData = await response.json()
-			console.log(responseData)
+			// console.log(responseData)
 
 			if (response.status === 200) {
 				formRef.current.reset()

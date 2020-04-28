@@ -107,7 +107,7 @@ export default function SoundBoards() {
 								</span>
 							</button>
 							<button
-								onClick={function(e: any) {
+								onClick={function (e: any) {
 									e.target.classList.toggle(styles.expanded)
 								}}
 								className={styles.dropdown}

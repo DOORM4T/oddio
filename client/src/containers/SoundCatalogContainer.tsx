@@ -17,8 +17,9 @@ export default function SoundCatalogContainer({
 	useEffect(() => {
 		const fetchSounds = async () => {
 			const response = await fetch(
-				`/api/sounds?start=${start}&count=${count}&name=${query ||
-					globalState?.soundsQuery}`
+				`/api/sounds?start=${start}&count=${count}&name=${
+					query || globalState?.soundsQuery
+				}`
 			)
 			const data = await response.json()
 
@@ -26,8 +27,9 @@ export default function SoundCatalogContainer({
 			else setSounds((prevData) => [...prevData, ...data])
 
 			const nextResponse = await fetch(
-				`/api/sounds?start=${start + count}&count=${count}&name=${query ||
-					globalState?.soundsQuery}`
+				`/api/sounds?start=${start + count}&count=${count}&name=${
+					query || globalState?.soundsQuery
+				}`
 			)
 			const nextData = await nextResponse.json()
 
