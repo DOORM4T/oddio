@@ -5,22 +5,26 @@ import express, {
 	NextFunction,
 	CookieOptions,
 } from 'express'
-import cors from 'cors'
-import cookieParser, { CookieParseOptions } from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 import routes from './routes/index.route'
 import { resolve } from 'path'
-import { PORT } from './index'
+// import cors from 'cors'
+// import { PORT } from './index'
 
 const app: Application = express()
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(cors(/**{ origin: `http://localhost:${PORT}` }**/))
+// app.use(cors(/**{ origin: `http://localhost:${PORT}` }**/))
 app.use(cookieParser())
 app.set('view engine', 'ejs')
 app.set('views', resolve(__dirname, '../views'))
 app.use('/', routes)
+
+// Serve Client
+app.use(express.static(resolve(__dirname, '../build')))
 app.use('/*', (req: Request, res: Response, next: NextFunction) => {
-	res.status(404).send('Page not found')
+	res.sendFile(resolve(__dirname, '../build/index.html'))
+	// res.status(404).send('Page not found')
 })
 
 export default app
