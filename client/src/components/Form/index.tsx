@@ -58,6 +58,8 @@ export default function Form({
 				})
 			} else {
 				// Default form POST
+				console.log(formState)
+
 				body = JSON.stringify(formState)
 				response = await fetch(action, {
 					method,
@@ -79,8 +81,7 @@ export default function Form({
 				window.location.reload()
 			}
 		} catch (error) {
-			console.error(error.message)
-			setErrorMessage(() => error.message)
+			setErrorMessage(() => 'Invalid input.')
 		}
 	}
 
