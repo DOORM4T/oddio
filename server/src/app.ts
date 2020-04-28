@@ -23,7 +23,7 @@ app.use('/', routes)
 // Serve Client
 app.use(express.static(resolve(__dirname, '../build')))
 app.use('/*', (req: Request, res: Response, next: NextFunction) => {
-	res.sendFile(resolve(__dirname, '../build/index.html'))
+	res.sendFile(resolve(__dirname, '../build/static/index.html'))
 	// res.status(404).send('Page not found')
 })
 
