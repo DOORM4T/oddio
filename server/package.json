@@ -1,10 +1,10 @@
 {
 	"name": "oddio-concept-yup",
 	"version": "1.0.0",
-	"main": "src/dist/index.js",
+	"main": "dist/index.js",
 	"license": "MIT",
 	"scripts": {
-		"start": "node src/dist/index.js",
+		"start": "node dist/index.js",
 		"dev": "cross-env NODE_ENV=development nodemon src/index.ts",
 		"build": "tsc -p ./src",
 		"test": "jest",
@@ -41,5 +41,10 @@
 		"mongodb": "^3.5.0",
 		"multer": "^1.4.2",
 		"yup": "^0.28.0"
+	},
+	"engines": {
+		"node": "12.14.1",
+		"npm": "6.13.6",
+		"yarn": "1.21.1"
 	}
 }
