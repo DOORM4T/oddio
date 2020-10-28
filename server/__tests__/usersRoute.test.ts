@@ -12,6 +12,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
+	await client.db().dropDatabase()
 	await client.close()
 	done()
 })
@@ -106,25 +107,11 @@ describe('Users API', () => {
 				.expect(200, done)
 		})
 
-		it('forbidden to delete non-existant users', (done) => {
+		it('forbidden to delete non-existent users', (done) => {
 			request
 				.post('/auth/deleteuser')
-				.send({ password: 'password of nonexistant user' })
+				.send({ password: 'password of nonexistent user' })
 				.expect(403, done)
 		})
 	})
-
-	// describe('User Info', () => {
-	// 	it('gets list of users',  (done) => {})
-	// 	it('gets user by ID',  (done) => {})
-	// })
-
-	// describe('User Activity', () => {
-	// 	it('successfully follow other users',  (done) => {})
-	// 	it('gets user by ID',  (done) => {})
-	// })
-
-	// describe('Account Management', () => {
-	// 	it('deletes user account successfully',  (done) => {})
-	// })
 })

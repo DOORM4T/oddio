@@ -4,7 +4,6 @@ import app from '../src/app'
 import injectMongo, { client } from '../src/db'
 import soundSchema, { Sound } from '../src/models/schemas/soundSchema'
 import path from 'path'
-import { ObjectId } from 'mongodb'
 
 const request: SuperTest<any> = supertest.agent(app)
 let authCookie: string[]
@@ -48,6 +47,7 @@ afterAll((done) => {
 			.expect(200)
 			.end(async (err: Error, res: Response) => {
 				if (err) throw err
+				await client.db().dropDatabase()
 				await client.close()
 				done()
 			})
@@ -60,7 +60,7 @@ describe('Sounds API', () => {
 	let testSoundId: string, testSoundSourceId: string
 
 	describe('POST requests on /api/sounds', () => {
-		it('successfully POSTs valid form data', async (done) => {
+		it('successfully POSTs valid form data', (done) => {
 			request
 				.post('/api/sounds/add')
 				.set({ 'Content-Type': 'multipart/form-data', Cookie: authCookie })

@@ -7,7 +7,7 @@ if (!process.env.MONGO_URI) {
 	process.exit(1)
 }
 
-export const PORT = process.env.PORT || 3001
+export const PORT = process.env.PORT || 3000
 const mongoURI = process.env.MONGO_URI || ''
 injectMongoIntoModels(mongoURI).then(() => {
 	app.listen(PORT, () => {
