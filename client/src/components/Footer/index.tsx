@@ -9,11 +9,7 @@ export default function Footer() {
 				<span role="img" aria-label="heart">
 					💖
 				</span>{' '}
-				and{' '}
-				<span role="img" aria-label="heartbreak">
-					💔
-				</span>{' '}
-				by Matt Seto
+				by Mat Seto
 			</span>
 		</footer>
 	)
