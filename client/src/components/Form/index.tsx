@@ -77,9 +77,7 @@ export default function Form({
 				formRef.current.reset()
 				if (redirect) history.push(redirect)
 				else refreshUserData()
-			} else {
-				window.location.reload()
-			}
+			} 
 		} catch (error) {
 			setErrorMessage(() => 'Invalid input.')
 		}
