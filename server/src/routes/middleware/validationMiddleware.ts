@@ -6,14 +6,14 @@ export default function validationMiddleware(
 	res: Response,
 	next: NextFunction
 ) {
+	const secret = process.env.JWT_SECRET || ''
 	try {
 		const token = req.cookies.authToken
-		if (!token) next(new Error('No token provided.'))
+		if (!token) throw new Error('No token provided.')
 
-		const secret = process.env.JWT_SECRET || ''
 		const decoded: any = verify(token, secret)
 		if (!(decoded || 'email' in decoded || 'username' in decoded))
-			next(new Error('Invalid token.'))
+			throw new Error('Invalid token.')
 		res.locals.userEmail = decoded.email
 		res.locals.username = decoded.username
 		next()
