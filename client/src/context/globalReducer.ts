@@ -1,6 +1,7 @@
 import { GlobalStateAction } from './globalActions'
 import { User } from '../util/types/User.type'
 import { Sound } from '../util/types/Sound.type'
+import { auth } from '../app'
 
 export const initialGlobalState = {
 	user: {
