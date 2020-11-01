@@ -17,6 +17,10 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import SoundsCatalog from './pages/SoundsCatalog'
 import SoundPlayer from './components/SoundPlayer'
+import firebaseApp from './firebase' /* private; exported firebase app using credentials */
+
+/* export firebase auth app */
+export const auth = firebaseApp.auth()
 
 export default function App() {
 	const [globalState, dispatch] = useReducer<
