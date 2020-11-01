@@ -3,7 +3,7 @@ import Button from '../components/Button'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import useUserInfoFromCookie from '../util/useUserInfoFromCookie'
-import { auth } from '../app'
+import { auth } from '../App'
 
 export default function GoogleSignInButton() {
 	useUserInfoFromCookie(true)
