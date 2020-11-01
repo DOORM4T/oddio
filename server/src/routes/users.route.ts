@@ -5,6 +5,7 @@ const router = Router()
 
 // router.get('/', UsersController.getUsers)
 router.get('/:username', validate, UsersController.getUserByUsername)
+router.get('/email/:email', UsersController.doesUserWithEmailExist)
 
 router.post(
 	'/:username/soundboards/create',

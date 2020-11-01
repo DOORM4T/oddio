@@ -1,11 +1,14 @@
 import UsersModel from '../models/UsersModel'
 import { Request, Response, NextFunction } from 'express'
 import { MongoError, ObjectId } from 'mongodb'
-import userSchema, { User } from '../models/schemas/userSchema'
 import { compare } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
+import { firebaseAuth } from '../db'
+import userSchema, { User } from '../models/schemas/userSchema'
 
 export default class UsersController {
+	private static MAX_COOKIE_AGE = 1000 * 60 * 60 * 24
+
 	/**
 	 * @route   /api/users
 	 * @method  GET
@@ -26,7 +29,7 @@ export default class UsersController {
 	 * @route   /api/users/:username
 	 * @method  GET
 	 * @desc    Get user by username
-	 * @access  Public
+	 * @access  Private
 	 */
 	static async getUserByUsername(
 		req: Request,
@@ -35,8 +38,8 @@ export default class UsersController {
 	) {
 		try {
 			const username = req.params.username.toUpperCase()
-			const users = await UsersModel.findUserByUsername(username)
-			res.json(users)
+			const user = await UsersModel.findUserByUsername(username)
+			res.json(user)
 		} catch (error) {
 			if (error instanceof MongoError)
 				res.status(500).json({ message: 'Unable to get user.' })
@@ -46,36 +49,141 @@ export default class UsersController {
 	}
 
 	/**
+	 * @route   /api/users/:email
+	 * @method  GET
+	 * @desc    Get user by email
+	 * @access  Public
+	 */
+	static async doesUserWithEmailExist(
+		req: Request,
+		res: Response,
+		next: NextFunction
+	) {
+		try {
+			const email = req.params.email.toUpperCase()
+			const user = await UsersModel.findUserByFields({ email })
+			res.json({ result: !!user })
+		} catch (error) {
+			if (error instanceof MongoError)
+				res.status(500).json({ message: 'Unable to get user.' })
+			else res.status(400).send({ message: 'User does not exist' })
+			next(error)
+		}
+	}
+
+	/**
+	 * Generates a JWT from email & username
+	 * @param email
+	 * @param username
+	 */
+	private static generateJWT(email: string, username: string) {
+		const secret = process.env.JWT_SECRET || ''
+		const jwt = sign({ email, username }, secret, {
+			algorithm: 'HS256',
+			expiresIn: '24h',
+		})
+		return jwt
+	}
+
+	/**
 	 * @route   /auth/register
 	 * @method  POST
 	 * @desc    Register a new user
 	 * @access  Public
 	 */
 	static async registerUser(req: Request, res: Response, next: NextFunction) {
+		const registrationData = {
+			_id: new ObjectId(),
+			email: '',
+			username: '',
+			password: '',
+		}
 		try {
-			req.body.username = req.body.username.toUpperCase()
-			req.body.email = req.body.email.toUpperCase()
+			/* get registration details based on registration type */
+			const isRegisteringWithGoogle = 'firebaseAuthToken' in req.body
+			if (isRegisteringWithGoogle) {
+				const decodedToken = await firebaseAuth.verifyIdToken(
+					req.body.firebaseAuthToken
+				)
+				if (!decodedToken)
+					throw new Error('Invalid Google account credentials.')
 
+					
+					registrationData.email = req.body.email.toUpperCase()
+					registrationData.username = req.body.displayName.toUpperCase()
+					registrationData.password = 'REGISTERED_WITH_GOOGLE'
+					console.log(registrationData);
+
+				/* Login if user is already registered  */
+				const existingUser = await UsersModel.findUserByFields({
+					email: registrationData.email,
+				})
+
+				if (existingUser) {
+					const { email } = registrationData
+					const username = existingUser.username
+
+					const jwt = UsersController.generateJWT(email, username)
+
+					/* authenticate the user */
+					return res
+						.clearCookie('authToken')
+						.clearCookie('user')
+						.cookie('authToken', jwt, {
+							maxAge: UsersController.MAX_COOKIE_AGE,
+							httpOnly: true,
+						})
+						.cookie('user', username, {
+							maxAge: UsersController.MAX_COOKIE_AGE,
+						})
+						.json({ message: `Logged in as ${username}` })
+				}
+			} else {
+				/* regular sign-in form */
+				registrationData.username = req.body.username.toUpperCase()
+				registrationData.email = req.body.email.toUpperCase()
+				registrationData.password = req.body.password
+			}
+
+			/* ensure username isn't taken */
 			let existingUser = await UsersModel.findUserByFields({
-				username: req.body.username,
+				username: registrationData.username,
 			})
-			if (existingUser) throw new Error('Username already taken.')
 
+			if (existingUser) throw new Error('That username is taken.')
+
+			/* ensure there isn't an account already registered with this email  */
 			existingUser = await UsersModel.findUserByFields({
-				email: req.body.email,
+				email: registrationData.email,
 			})
 			if (existingUser)
 				throw new Error(
-					`An account using the email ${req.body.email} already exists.`
+					`An account using the email ${registrationData.email} already exists.`
 				)
 
-			req.body._id = new ObjectId()
-			const validatedUserData: User = await userSchema.validate(req.body, {
-				stripUnknown: true,
-			})
-
+			/* validate with user schema */
+			const validatedUserData: User = await userSchema.validate(
+				registrationData,
+				{
+					stripUnknown: true,
+				}
+			)
 			const insertionResult = await UsersModel.addUser(validatedUserData)
-			res.json(insertionResult)
+			if (!insertionResult) throw new Error('Failed to register user.')
+
+			const { email, username } = validatedUserData
+			const jwt = UsersController.generateJWT(email, username)
+			res
+				.clearCookie('authToken')
+				.clearCookie('user')
+				.cookie('authToken', jwt, {
+					maxAge: UsersController.MAX_COOKIE_AGE,
+					httpOnly: true,
+				})
+				.cookie('user', username, {
+					maxAge: UsersController.MAX_COOKIE_AGE,
+				})
+				.json(`Created account for ${email}. Logging in.`)
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500)
 			else res.status(400)
@@ -108,21 +216,19 @@ export default class UsersController {
 
 			if (!passwordIsValid) throw new Error('Invalid password.')
 
-			const secret = process.env.JWT_SECRET || ''
-			const jwt = sign({ email: user.email, username: user.username }, secret, {
-				algorithm: 'HS256',
-				expiresIn: '24h',
-			})
+			const jwt = UsersController.generateJWT(user.email, user.username)
 
 			res
+				.clearCookie('authToken')
+				.clearCookie('user')
 				.cookie('authToken', jwt, {
-					maxAge: 1000 * 60 * 60 * 24,
+					maxAge: UsersController.MAX_COOKIE_AGE,
 					httpOnly: true,
 				})
 				.cookie('user', user.username, {
-					maxAge: 1000 * 60 * 60 * 24,
+					maxAge: UsersController.MAX_COOKIE_AGE,
 				})
-				.json({ message: `logged in as ${user.username}` })
+				.json({ message: `Logged in as ${user.username}` })
 		} catch (error) {
 			if (error instanceof MongoError) res.status(500).send(error.message)
 			else res.status(400).json({ message: 'Invalid email and/or password.' })
