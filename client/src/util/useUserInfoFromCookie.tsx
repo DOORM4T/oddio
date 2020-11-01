@@ -16,7 +16,7 @@ export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 			return
 		}
 
-		console.log('updating')
+		// console.log('updating')
 
 		const getUserData = async () => {
 			const response = await fetch(`/api/users/${username}`)
@@ -25,6 +25,8 @@ export default function useUserInfoFromCookie(enableRedirect: boolean = false) {
 				logout()
 			}
 			dispatch(setUserAction(data))
+			if(enableRedirect)
+				history.push('/dashboard')
 		}
 		getUserData()
 
