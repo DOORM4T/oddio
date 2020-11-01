@@ -12,7 +12,8 @@ const userSchema = yup.object({
 		.string()
 		.matches(
 			new RegExp(
-				/^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&]{6,100}$/
+				/^[A-Za-z0-9!@#$%^&_-]{6,100}$/
+				// /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&]{6,100}$/
 			)
 		)
 		.required('Please enter a valid password.'),
